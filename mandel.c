@@ -33,7 +33,7 @@ uint8_t ***MyApple; // Farbwerte des des auf AppleGui skalierten Apfelmaenchen
 int **IterMatrix; // Iterationswerte aller Pixel des unskalierten Apfelmaenchen
 int CountsOfIter;// Anzahl der Iterationswerte
 int **IterMember;//[CountsOfIter][2] 0= anzahl Iterationswerte, 1= Anzahl Member der Iter-werte
-
+int GraphicsAreas[][4] = {{0,0,49,49}, {50,0,99,49}, {100,0,49,49}};
 // writes a in Parameters defined Area from MyFB to Hardware-FB (the Screen)
 void writeToFb(int x, int y, int width, int height){
 	#define FBP(myx, myy) Fbp[myx + myy*(LineLenght >> 2)]
