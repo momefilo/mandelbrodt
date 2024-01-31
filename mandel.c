@@ -150,10 +150,10 @@ void fillIterMember(){
 			}
 		}
 	}
-	for(int i=0; i<CountsOfIter; i++)printf(" A i=%d, c=%d, m=%d\n",i, IterMember[i][0], IterMember[i][1]);
+//	for(int i=0; i<CountsOfIter; i++)printf(" A i=%d, c=%d, m=%d\n",i, IterMember[i][0], IterMember[i][1]);
 	quicksort(IterMember,0,CountsOfIter-1);
-	for(int i=0; i<CountsOfIter; i++)printf(" B i=%d, 0=%d, 1=%d\n",i, IterMember[i][0], IterMember[i][1]);
-	printf("CountsOfIter = %d\n",CountsOfIter);
+//	for(int i=0; i<CountsOfIter; i++)printf(" B i=%d, 0=%d, 1=%d\n",i, IterMember[i][0], IterMember[i][1]);
+//	printf("CountsOfIter = %d\n",CountsOfIter);
 }
 /* thread-Functions for makeApfel() jede fuellt 1/4
  * MyApple in Graustufen */
