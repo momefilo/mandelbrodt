@@ -123,25 +123,37 @@ void fillIterMember(){
 				if(IterMatrix[x][y] == IterMember[i][0]){
 					IterMember[i][1]++;
 					inarray = true;
+					//printf("inarray\n");
 				}
 			}
 			if(! inarray){
-				if( !(IterMember = realloc(IterMember, (CountsOfIter +1) * sizeof(int *)))){
-					printf("Speicherfehler IterMember-Counts1\n");
-					return;}
-				if( !(IterMember[CountsOfIter] = malloc( (2) * sizeof(int)))){
-					printf("Speicherfehler IterMember-Counts2\n");
-					return;}
-				IterMember[CountsOfIter][0] = IterMatrix[x][y];
-				IterMember[CountsOfIter][1] = 1;
-				CountsOfIter++;
+				if((CountsOfIter % 199) == 0){
+					if( !(IterMember = realloc(IterMember, (CountsOfIter +200) * sizeof(int *)))){
+						printf("Speicherfehler IterMember-Counts1\n");
+						return;}
+					for(int k=0; k<200; k++){
+						if( !(IterMember[CountsOfIter+k] = malloc( (2) * sizeof(int)))){
+							printf("Speicherfehler IterMember-Counts2\n");
+							return;}
+						IterMember[CountsOfIter+k][0] = -1;
+						IterMember[CountsOfIter+k][1] = -1;
+					}
+					IterMember[CountsOfIter][0] = IterMatrix[x][y];
+					IterMember[CountsOfIter][1] = 1;
+					CountsOfIter++;
+				}
+				else{
+					IterMember[CountsOfIter][0] = IterMatrix[x][y];
+					IterMember[CountsOfIter][1] = 1;
+					CountsOfIter++;
+				}
 			}
 		}
 	}
-	printf("CountsOfIter = %d\n",CountsOfIter);
-//	for(int i=0; i<CountsOfIter; i++)printf(" A i=%d, c=%d, m=%d\n",i, IterMember[i][0], IterMember[i][1]);
+	for(int i=0; i<CountsOfIter; i++)printf(" A i=%d, c=%d, m=%d\n",i, IterMember[i][0], IterMember[i][1]);
 	quicksort(IterMember,0,CountsOfIter-1);
-//	for(int i=0; i<CountsOfIter; i++)printf(" B i=%d, 0=%d, 1=%d\n",i, IterMember[i][0], IterMember[i][1]);
+	for(int i=0; i<CountsOfIter; i++)printf(" B i=%d, 0=%d, 1=%d\n",i, IterMember[i][0], IterMember[i][1]);
+	printf("CountsOfIter = %d\n",CountsOfIter);
 }
 /* thread-Functions for makeApfel() jede fuellt 1/4
  * MyApple in Graustufen */
@@ -334,6 +346,8 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 			Endpoint[0] = x;
 			Endpoint[1] = y;
 		}
+		int fak = (Endpoint[0]-Startpoint[0]) / (RMax-RMin) * (IMax-IMin);
+		Endpoint[1] = (Startpoint[1]) + fak;
 		if(Endpoint[0] > 0) drawRect(0x00FF00FF);
 	}
 	else if(button == 2){// clear start- and endpiont
@@ -444,7 +458,7 @@ int main(){
 		RMax = 2.0;
 		IMin = -1.0;
 		IMax = 1.0;
-		Depth = 10000;
+		Depth = 100;
 		struct fb_fix_screeninfo finfo;
 		struct fb_var_screeninfo vinfo;
 		int fd = open("/dev/fb0", O_RDWR);
