@@ -12,30 +12,25 @@
 //#include <limits.h>
 //#include <sys/types.h>
 //#include <sys/stat.h>
+#include "gui_element.h"
 
-// the size of the Applepicture
-struct _AppleGui {
-	int x;
-	int y;
-	int width;
-	int height;
-} AppleGui;
+// the size and variables of the applepicture
+struct _AppleGui AppleGui;
 
 // Variablen
 int Startpoint[2], Endpoint[2]; // Zoomvariablen
 int BufferLenght, Bpp, LineLenght;// Displayvariablen
 double Xres, Yres;// Displayvariablen
-int Applewidth, Appleheight, Depth;// Apfelmännchenvariablen
-double RMin, RMax, IMin, IMax;// Apfelmännchenvariablen
 uint32_t *Fbp; // HardwareFB
 uint8_t ***MyFB;// HardwareFB Spiegel
 uint8_t ***MyApple; // Farbwerte des des auf AppleGui skalierten Apfelmaenchen
 int **IterMatrix; // Iterationswerte aller Pixel des unskalierten Apfelmaenchen
 int CountsOfIter;// Anzahl der Iterationswerte
 int **IterMember;//[CountsOfIter][2] 0= anzahl Iterationswerte, 1= Anzahl Member der Iter-werte
-int GraphicsAreas[][4] = {{0,0,49,49}, {50,0,99,49}, {100,0,49,49}};
+int GraphicsAreas[][4] = {{0,0,39,39}, {40,0,79,39}, {80,0,119,39}};
+
 // writes a in Parameters defined Area from MyFB to Hardware-FB (the Screen)
-void writeToFb(int x, int y, int width, int height){
+void *writeToFb(int x, int y, int width, int height){
 	#define FBP(myx, myy) Fbp[myx + myy*(LineLenght >> 2)]
 	for (int myx=x; myx<(x+width); myx++){
 		for (int myy=y; myy<(y+height); myy++){
@@ -44,23 +39,6 @@ void writeToFb(int x, int y, int width, int height){
 	}
 }
 
-// test
-void drawGraphic(){
-	FILE *gr_file;
-	gr_file=fopen("/home/momefilo/mandelbrodt/graphics/regler.data","rb");
-	if(gr_file){
-		int width = 40, height = 40;
-		for(int x=0; x<width; x++){
-			for(int y=0; y<height; y++){
-				uint8_t color[3];
-				fread(color, sizeof(uint8_t), 3, gr_file);
-				for(int i=0; i<3; i++)MyFB[x][y][i] = color[i];
-			}
-		}
-		writeToFb(0, 0, width, height);
-	}
-	fclose(gr_file);
-}
 
 /* gibt die anzahl an Iterationenen bis zur Abbruchbedingung der Mandelbrodtmenge,
  * oder 0 wenn (cr|ci) nicht in der Mandelbrodtmenge ist, zurueck*/
@@ -81,6 +59,7 @@ int getIterCount(double cr, double ci, int count){
 	}
 	return 0;
 }
+
 
 /* helper-Functions for makeApfel(). Initialisiert restliche globalel Variablen welche nicht in Main
  * initialisiert wurden */
@@ -116,14 +95,14 @@ void quicksort(int *number[],int first,int last){
 }
 void fillIterMember(){
 	int CountsOfIter = 0;
-	for(int x=0; x<Applewidth; x++){
-		for(int y=0; y<Appleheight; y++){
+	for(int x=0; x<AppleGui.xres; x++){
+		for(int y=0; y<AppleGui.yres; y++){
 			bool inarray = false;
 			for(int i=0; i<CountsOfIter; i++){
 				if(IterMatrix[x][y] == IterMember[i][0]){
 					IterMember[i][1]++;
 					inarray = true;
-					//printf("inarray\n");
+					break;
 				}
 			}
 			if(! inarray){
@@ -150,149 +129,115 @@ void fillIterMember(){
 			}
 		}
 	}
-//	for(int i=0; i<CountsOfIter; i++)printf(" A i=%d, c=%d, m=%d\n",i, IterMember[i][0], IterMember[i][1]);
 	quicksort(IterMember,0,CountsOfIter-1);
-//	for(int i=0; i<CountsOfIter; i++)printf(" B i=%d, 0=%d, 1=%d\n",i, IterMember[i][0], IterMember[i][1]);
-//	printf("CountsOfIter = %d\n",CountsOfIter);
+	printf("CountsOfIter=%d\n",CountsOfIter);
 }
-/* thread-Functions for makeApfel() jede fuellt 1/4
- * MyApple in Graustufen */
-static void *fillBuf1(void* val){
-	double delta_r = (RMax - RMin) / (Applewidth - 1);
-	double delta_i = (IMax - IMin) / (Appleheight - 1);
-	for(int x=0; x<(Applewidth/8*2); x++){
-		for(int y=0; y<(Appleheight); y++){
-			IterMatrix[x][y] = getIterCount((RMin)+x*delta_r, (IMin)+y*delta_i, (Depth));
-			double div = (255.0/(Depth)) * IterMatrix[x][y];
-			uint8_t cbyte = div;
-			for(int l=0; l<3; l++) MyApple[x][y][l] = cbyte;
-		}
-	}
-	printf("th_1 end\n");
-	return NULL;
-}
-static void *fillBuf2(void* val){
-	double delta_r = (RMax - RMin) / (Applewidth - 1);
-	double delta_i = (IMax - IMin) / (Appleheight - 1);
-	for(int x=(Applewidth/8*2); x<(Applewidth/8*3); x++){
-		for(int y=0; y<(Appleheight); y++){
-			IterMatrix[x][y] = getIterCount((RMin)+x*delta_r, (IMin)+y*delta_i, (Depth));
-			double div = (255.0/(Depth)) * IterMatrix[x][y];
-			uint8_t cbyte = div;
-			for(int l=0; l<3; l++) MyApple[x][y][l] = cbyte;
-		}
-	}
-	printf("th_2 end\n");
-	return NULL;
-}
-static void *fillBuf3(void* val){
-	double delta_r = (RMax - RMin) / (Applewidth - 1);
-	double delta_i = (IMax - IMin) / (Appleheight - 1);
-	for(int x=(Applewidth/8*3); x<(Applewidth/8*4); x++){
-		for(int y=0; y<(Appleheight); y++){
-			IterMatrix[x][y] = getIterCount((RMin)+x*delta_r, (IMin)+y*delta_i, (Depth));
-			double div = (255.0/(Depth)) * IterMatrix[x][y];
-			uint8_t cbyte = div;
-			for(int l=0; l<3; l++) MyApple[x][y][l] = cbyte;
-		}
-	}
-	printf("th_3 end\n");
-	return NULL;
-}
-static void *fillBuf4(void* val){
-	double delta_r = (RMax - RMin) / (Applewidth - 1);
-	double delta_i = (IMax - IMin) / (Appleheight - 1);
-	for(int x=(Applewidth/8*4); x<(Applewidth); x++){
-		for(int y=0; y<(Appleheight); y++){
-			IterMatrix[x][y] = getIterCount((RMin)+x*delta_r, (IMin)+y*delta_i, (Depth));
-			double div = (255.0/(Depth)) * IterMatrix[x][y];
-			uint8_t cbyte = div;
-			for(int l=0; l<3; l++) MyApple[x][y][l] = cbyte;
-		}
-	}
-	printf("th_4 end\n");
-	return NULL;
-}
+
 
 /* Füllt MyApple mit Daten aus getIterCount() mithilfe der vier *fillBufX() Threadfuntionen und
  * skaliert diese mit AppleGui auf <= 5/4 des Displays und
  * schreibt die Skalierten Daten in MyFB und
  * sendet diese mit writeToFb() auf das Display*/
+static void *thrFunc(void* val){
+	int *x = (int*)val;
+	double delta_r = (AppleGui.rmax - AppleGui.rmin) / (AppleGui.xres - 1);
+	double delta_i = (AppleGui.imax - AppleGui.imin) / (AppleGui.yres - 1);
+	for(int y=0; y<(AppleGui.yres); y++){
+		IterMatrix[*x][y] = getIterCount((AppleGui.rmin)+(*x)*delta_r, (AppleGui.imin)+y*delta_i, (AppleGui.depth));
+		double div = (255.0/(AppleGui.depth)) * IterMatrix[*x][y];
+		uint8_t cbyte = div;
+		for(int l=0; l<3; l++) MyApple[*x][y][l] = cbyte;
+	}
+	return NULL;
+}
 void makeApfel(/*double xres, double yres, double min_r, double max_r, double min_i, double max_i, double depth*/){
-	// alloc Memory for MyApple
-	if( !(MyApple = realloc(MyApple, (Applewidth * sizeof(uint8_t **))))){
-		printf("Speicherfehler Zeilen\n");
-		return;}
-	for(int i=0; i<Applewidth; i++){
-		if( !(MyApple[i] = realloc(MyApple[i],(Appleheight * sizeof(uint8_t *))))){
+	
+	if(1){// alloc Memory for MyApple and IterMatrix
+		if( !(MyApple = realloc(MyApple, (AppleGui.xres * sizeof(uint8_t **))))){
+			printf("Speicherfehler Zeilen\n");
+			return;}
+		for(int i=0; i<AppleGui.xres; i++){
+			if( !(MyApple[i] = realloc(MyApple[i],(AppleGui.yres * sizeof(uint8_t *))))){
+				printf("Speicherfehler Spalte %d\n", i);
+				return;}}
+		for(int i=0; i<AppleGui.xres; i++){
+			for(int k=0; k<AppleGui.yres; k++){
+				if( !(MyApple[i][k] = realloc(MyApple[i][k],(3 * sizeof(uint8_t))))){
+					printf("Speicherfehler Zeile=%d Spalte=%d\n", i, k);
+					return;}
+				for(int l=0; l<3; l++) MyApple[i][k][l] = 0;}}
+		if( !(IterMatrix = realloc(IterMatrix, (AppleGui.xres * sizeof(int **))))){
+			printf("Speicherfehler IterMatrix-Zeilen\n");
+			return;}
+		for(int i=0; i<AppleGui.xres; i++){
+		if( !(IterMatrix[i] = realloc(IterMatrix[i],(AppleGui.yres * sizeof(int *))))){
 			printf("Speicherfehler Spalte %d\n", i);
 			return;}}
-	for(int i=0; i<Applewidth; i++){
-		for(int k=0; k<Appleheight; k++){
-			if( !(MyApple[i][k] = realloc(MyApple[i][k],(3 * sizeof(uint8_t))))){
-				printf("Speicherfehler Zeile=%d Spalte=%d\n", i, k);
-				return;}
-			for(int l=0; l<3; l++) MyApple[i][k][l] = 0;}}
-			
-	// alloc Memory for IterMatrix
-	if( !(IterMatrix = realloc(IterMatrix, (Applewidth * sizeof(int **))))){
-		printf("Speicherfehler IterMatrix-Zeilen\n");
-		return;}
-	for(int i=0; i<Applewidth; i++){
-		if( !(IterMatrix[i] = realloc(IterMatrix[i],(Appleheight * sizeof(int *))))){
-			printf("Speicherfehler Spalte %d\n", i);
-			return;}}
+	}
 	
-	//starts four threads to getIterCount() to fill MyApple with Color-Data and IterMatrix with itercounts
-	pthread_t thread1, thread2, thread3, thread4;
-	double val[] = {Applewidth, Appleheight, RMax, RMin, IMax, IMin, Depth};
-	if(pthread_create( &thread1, NULL, &fillBuf1, (void*)val)) printf("Konnte Thread1 nicht starten\n");
-	if(pthread_create( &thread2, NULL, &fillBuf2, (void*)val)) printf("Konnte Thread2 nicht starten\n");
-	if(pthread_create( &thread3, NULL, &fillBuf3, (void*)val)) printf("Konnte Thread2 nicht starten\n");
-	if(pthread_create( &thread4, NULL, &fillBuf4, (void*)val)) printf("Konnte Thread2 nicht starten\n");
-	pthread_join(thread1, NULL);
-	pthread_join(thread2, NULL);
-	pthread_join(thread3, NULL);
-	pthread_join(thread4, NULL);
-	
-	//scale the MyApple and AppleGui to fit in 5/4 of the full-screen
+	if(1){//start <=100 Threads to fill MyApple and IterMatrix
+		int x = 0;
+		double prozent = 0;
+		int maxThr = 100;
+		while((AppleGui.xres % maxThr) != 0) maxThr--;
+		while(x < AppleGui.xres){
+			pthread_t thrIds[maxThr];
+			int tmp_x[maxThr];
+			int aktThr = 0;
+			while(aktThr < maxThr){
+				tmp_x[aktThr] = x;
+				pthread_create( &thrIds[aktThr], NULL, &thrFunc, (void *)tmp_x+aktThr*sizeof(int));
+				aktThr++;
+				x++;
+			}
+			for(int id=0; id<maxThr; id++){
+				pthread_join(thrIds[id], NULL);
+			}
+			prozent++;
+			double tmp = (100/(double)(AppleGui.xres/maxThr)) * prozent;
+			printf(" %d Prozent\n",(int)tmp);
+		}
+	}
+
 	int x_fak = 1, y_fak = 1;
-	int tmpxres = Applewidth;
-	if(Applewidth > (Xres/5*4)){
-		while(tmpxres > (Xres/5*4)) {x_fak++;tmpxres = Applewidth / x_fak;}
-		x_fak = -x_fak;
-	}
-	else{
-		while((Xres/5*4) > tmpxres) {x_fak++;tmpxres = Applewidth * x_fak;}
-		if(Applewidth > (Xres/5*4)) x_fak--;
-	}
-	int tmpyres = Appleheight;
-	if(Appleheight > (Yres/5*4)){
-		while(tmpyres > (Yres/5*4)) {y_fak++;tmpyres = Appleheight / y_fak;}
-		y_fak = -y_fak;
-	}
-	else{
-		while((Yres/5*4) > tmpyres) {y_fak++;tmpyres = Appleheight * y_fak;}
-		if(Appleheight > (Yres/5*4)) y_fak--;
+	if(1){//scale the MyApple and AppleGui to fit in 5/4 of the full-screen
+		int tmpxres = AppleGui.xres;
+		if(AppleGui.xres > (Xres/5*4)){
+			while(tmpxres > (Xres/5*4)) {x_fak++;tmpxres = AppleGui.xres / x_fak;}
+			x_fak = -x_fak;
+		}
+		else{
+			while((Xres/5*4) > tmpxres) {x_fak++;tmpxres = AppleGui.xres * x_fak;}
+			if(tmpxres > (Xres/5*4)) x_fak--;
+		}
+		int tmpyres = AppleGui.yres;
+		if(AppleGui.yres > (Yres/5*4)){
+			while(tmpyres > (Yres/5*4)) {y_fak++;tmpyres = AppleGui.yres / y_fak;}
+			y_fak = -y_fak;
+		}
+		else{
+			while((Yres/5*4) > tmpyres) {y_fak++;tmpyres = AppleGui.yres * y_fak;}
+			if(tmpyres > (Yres/5*4)) y_fak--;
+		}
+		
+		if(x_fak < y_fak) y_fak = x_fak;
+		else x_fak = y_fak;
+		
+		if(x_fak > 0 && y_fak > 0){
+			AppleGui.width = AppleGui.xres * x_fak;
+			AppleGui.height = AppleGui.yres * x_fak;
+		}
+		else if(x_fak < 0 && y_fak < 0){
+			AppleGui.width = AppleGui.xres / (x_fak * -1);
+			AppleGui.height = AppleGui.yres / (x_fak * -1);
+		}
+		else printf("Es werden nur Querformate verarbeitet\n");
+		
+		AppleGui.x = Xres - AppleGui.width;
+		AppleGui.y = 0;
 	}
 	
-	if(x_fak < y_fak) y_fak = x_fak;
-	else x_fak = y_fak;
-	
-	if(x_fak > 0 && y_fak > 0){
-		AppleGui.width = Applewidth * x_fak;
-		AppleGui.height = Appleheight * x_fak;
-	}
-	else if(x_fak < 0 && y_fak < 0){
-		AppleGui.width = Applewidth / (x_fak * -1);
-		AppleGui.height = Appleheight / (x_fak * -1);
-	}
-	else printf("Es werden nur Querformate verarbeitet\n");
-	
-	AppleGui.x = Xres - AppleGui.width;
-	AppleGui.y = 0;
-	//write MyApple to MyFB
-	if(x_fak < 0){
+	if(x_fak < 0){//write MyApple to MyFB
 		x_fak = -1*x_fak;
 		for (int x=AppleGui.x; x<(AppleGui.x+AppleGui.width); x++){
 			for(int y=AppleGui.y; y<(AppleGui.y+AppleGui.height); y++){
@@ -314,7 +259,8 @@ void makeApfel(/*double xres, double yres, double min_r, double max_r, double mi
 	fillIterMember();
 }
 
-//GUI-Funktionen
+
+//GUI-Zoomfunktionen
 void drawRect(uint32_t color){
 	int xstart = Startpoint[0], xend = Endpoint[0], ystart = Startpoint[1], yend = Endpoint[1];
 	if(xend < xstart){
@@ -346,7 +292,7 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 			Endpoint[0] = x;
 			Endpoint[1] = y;
 		}
-		int fak = (Endpoint[0]-Startpoint[0]) / (RMax-RMin) * (IMax-IMin);
+		int fak = (Endpoint[0]-Startpoint[0]) / (AppleGui.rmax-AppleGui.rmin) * (AppleGui.imax-AppleGui.imin);
 		Endpoint[1] = (Startpoint[1]) + fak;
 		if(Endpoint[0] > 0) drawRect(0x00FF00FF);
 	}
@@ -369,27 +315,27 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 			Endpoint[1] = tmp;
 		}
 		
-		if(AppleGui.width > Applewidth){
-			int newstartx =  (Startpoint[0]-AppleGui.x) / (AppleGui.width/Applewidth);
-			int newendx =  (Endpoint[0]-AppleGui.x) / (AppleGui.width/Applewidth);
-			int newstarty =  (Startpoint[1]-AppleGui.y) / (AppleGui.height/Appleheight);
-			int newendy =  (Endpoint[1]-AppleGui.y) / (AppleGui.height/Appleheight);
-			double rmin = RMin+((RMax - RMin) / Applewidth) * (newstartx);
-			double rmax = RMin+((RMax - RMin) / Applewidth) * (newendx);
-			double imin = IMin+((IMax - IMin) / Appleheight) * newstarty;
-			double imax = IMin+((IMax - IMin) / Appleheight) * newendy;
-			makeApfel(Applewidth, Appleheight, rmin, rmax, imin, imax, Depth);
+		if(AppleGui.width > AppleGui.xres){
+			int newstartx =  (Startpoint[0]-AppleGui.x) / (AppleGui.width/AppleGui.xres);
+			int newendx =  (Endpoint[0]-AppleGui.x) / (AppleGui.width/AppleGui.xres);
+			int newstarty =  (Startpoint[1]-AppleGui.y) / (AppleGui.height/AppleGui.yres);
+			int newendy =  (Endpoint[1]-AppleGui.y) / (AppleGui.height/AppleGui.yres);
+			double rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
+			double rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
+			double imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newstarty;
+			double imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newendy;
+			makeApfel(AppleGui.xres, AppleGui.yres, rmin, rmax, imin, imax, AppleGui.depth);
 		}
 		else{
-			int newstartx =  (Startpoint[0]-AppleGui.x) * (Applewidth/AppleGui.width);
-			int newendx =  (Endpoint[0]-AppleGui.x) * (Applewidth/AppleGui.width);
-			int newstarty =  (Startpoint[1]-AppleGui.y) * (Appleheight/AppleGui.height);
-			int newendy =  (Endpoint[1]-AppleGui.y) * (Appleheight/AppleGui.height);
-			double rmin = RMin+((RMax - RMin) / Applewidth) * (newstartx);
-			double rmax = RMin+((RMax - RMin) / Applewidth) * (newendx);
-			double imin = IMin+((IMax - IMin) / Appleheight) * (newstarty);
-			double imax = IMin+((IMax - IMin) / Appleheight) * (newendy);
-			RMin=rmin; RMax=rmax;IMin=imin;IMax=imax;
+			int newstartx =  (Startpoint[0]-AppleGui.x) * (AppleGui.xres/AppleGui.width);
+			int newendx =  (Endpoint[0]-AppleGui.x) * (AppleGui.xres/AppleGui.width);
+			int newstarty =  (Startpoint[1]-AppleGui.y) * (AppleGui.yres/AppleGui.height);
+			int newendy =  (Endpoint[1]-AppleGui.y) * (AppleGui.yres/AppleGui.height);
+			double rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
+			double rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
+			double imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newstarty);
+			double imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newendy);
+			AppleGui.rmin=rmin; AppleGui.rmax=rmax;AppleGui.imin=imin;AppleGui.imax=imax;
 			makeApfel();
 		}
 	}
@@ -401,6 +347,7 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 	}
 
 }
+
 void myLoop(){
 	//maus
 	int fdm = open("/dev/input/mice", O_RDONLY | O_SYNC);
@@ -447,18 +394,19 @@ void myLoop(){
 }
 
 int main(){
-	if(1){ // inits Globalvariables and Memory and the FB
+	if(1){ // inits Globalvariables and MyFB and the HardwareFB
 		for(int i=0; i<2; i++){ // Start- und Endpiont
 			Startpoint[i] = 0;
 			Endpoint[i] = 0;
 		}
-		Applewidth = 1920/5*4;
-		Appleheight = 1080/5*4;
-		RMin = -1.0;
-		RMax = 2.0;
-		IMin = -1.0;
-		IMax = 1.0;
-		Depth = 100;
+		AppleGui.xres = 1920/5*4;
+		AppleGui.yres = 1080/5*4;
+		AppleGui.rmin = -1.0;
+		AppleGui.rmax = 2.0;
+		AppleGui.imin = -1.0;
+		AppleGui.imax = 1.0;
+		AppleGui.depth = 1000;
+
 		struct fb_fix_screeninfo finfo;
 		struct fb_var_screeninfo vinfo;
 		int fd = open("/dev/fb0", O_RDWR);
@@ -505,11 +453,15 @@ int main(){
 			}
 		}
 	}
-	// Zeichnet ein Apfelmaenchen
+
+	// Zeichnet das Apfelmaenchen
 	makeApfel();
+
+// TODO Gui
+	double* werte[] = {&AppleGui.rmax,&AppleGui.rmin};
+	gui_init(19, 49, werte, MyFB, &writeToFb);
 	
 	printf("x = %d, y = %d, width = %d, height = %d\n", AppleGui.x, AppleGui.y, AppleGui.width, AppleGui.height);
-//	drawGraphic();
 	
 	myLoop();
 	
