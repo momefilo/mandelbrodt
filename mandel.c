@@ -9,9 +9,6 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <stdbool.h>
-//#include <limits.h>
-//#include <sys/types.h>
-//#include <sys/stat.h>
 #include "gui_element.h"
 
 // the size and variables of the applepicture
@@ -19,7 +16,7 @@ struct _AppleGui AppleGui;
 
 // Variablen
 int Startpoint[2], Endpoint[2]; // Zoomvariablen
-int BufferLenght, Bpp, LineLenght;// Displayvariablen
+int BufferLenght, LineLenght;// Displayvariablen
 double Xres, Yres;// Displayvariablen
 uint32_t *Fbp; // HardwareFB
 uint8_t ***MyFB;// HardwareFB Spiegel
@@ -27,7 +24,6 @@ uint8_t ***MyApple; // Farbwerte des des auf AppleGui skalierten Apfelmaenchen
 int **IterMatrix; // Iterationswerte aller Pixel des unskalierten Apfelmaenchen
 int CountsOfIter;// Anzahl der Iterationswerte
 int **IterMember;//[CountsOfIter][2] 0= anzahl Iterationswerte, 1= Anzahl Member der Iter-werte
-int GraphicsAreas[][4] = {{0,0,39,39}, {40,0,79,39}, {80,0,119,39}};
 
 // writes a in Parameters defined Area from MyFB to Hardware-FB (the Screen)
 void *writeToFb(int x, int y, int width, int height){
@@ -291,15 +287,11 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 		else{
 			Endpoint[0] = x;
 			Endpoint[1] = y;
-		}
-		int fak = (Endpoint[0]-Startpoint[0]) / (AppleGui.rmax-AppleGui.rmin) * (AppleGui.imax-AppleGui.imin);
-		Endpoint[1] = (Startpoint[1]) + fak;
-		if(Endpoint[0] > 0) drawRect(0x00FF00FF);
-	}
-	else if(button == 2){// clear start- and endpiont
-		for(int i=0; i<2; i++){
-			Startpoint[i] = 0;
-			Endpoint[i] = 0;
+			int ydiff = ((Endpoint[0] - Startpoint[0]) * AppleGui.height) / (AppleGui.width);
+			if(ydiff < 0) ydiff = ydiff * -1;
+			if(Endpoint[1] < Startpoint[1]) Endpoint[1] = Startpoint[1] - ydiff;
+			else Endpoint[1] = Startpoint[1] + ydiff;
+			if(Endpoint[0] > 0) drawRect(0x00FF00FF);
 		}
 	}
 	else if(button == 3 && Endpoint[0] > 0){//make new Apple
@@ -314,43 +306,41 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 			Startpoint[1] = Endpoint[1];
 			Endpoint[1] = tmp;
 		}
-		
+		double rmin, rmax, imin, imax;
 		if(AppleGui.width > AppleGui.xres){
 			int newstartx =  (Startpoint[0]-AppleGui.x) / (AppleGui.width/AppleGui.xres);
 			int newendx =  (Endpoint[0]-AppleGui.x) / (AppleGui.width/AppleGui.xres);
 			int newstarty =  (Startpoint[1]-AppleGui.y) / (AppleGui.height/AppleGui.yres);
 			int newendy =  (Endpoint[1]-AppleGui.y) / (AppleGui.height/AppleGui.yres);
-			double rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
-			double rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
-			double imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newstarty;
-			double imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newendy;
-			makeApfel(AppleGui.xres, AppleGui.yres, rmin, rmax, imin, imax, AppleGui.depth);
+			rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
+			rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
+			imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newstarty;
+			imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * newendy;
 		}
 		else{
 			int newstartx =  (Startpoint[0]-AppleGui.x) * (AppleGui.xres/AppleGui.width);
 			int newendx =  (Endpoint[0]-AppleGui.x) * (AppleGui.xres/AppleGui.width);
 			int newstarty =  (Startpoint[1]-AppleGui.y) * (AppleGui.yres/AppleGui.height);
 			int newendy =  (Endpoint[1]-AppleGui.y) * (AppleGui.yres/AppleGui.height);
-			double rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
-			double rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
-			double imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newstarty);
-			double imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newendy);
-			AppleGui.rmin=rmin; AppleGui.rmax=rmax;AppleGui.imin=imin;AppleGui.imax=imax;
-			makeApfel();
+			rmin = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newstartx);
+			rmax = AppleGui.rmin+((AppleGui.rmax - AppleGui.rmin) / AppleGui.xres) * (newendx);
+			imin = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newstarty);
+			imax = AppleGui.imin+((AppleGui.imax - AppleGui.imin) / AppleGui.yres) * (newendy);
 		}
+		AppleGui.rmin=rmin; AppleGui.rmax=rmax;AppleGui.imin=imin;AppleGui.imax=imax;
+		makeApfel();
 	}
-	else if(button == 0){
+	else if(button == 0){// clear Start- Endpoint
 		Startpoint[0]=0;
 		Startpoint[1]=0;
 		Endpoint[0]=0;
 		Endpoint[1]=0;
 	}
-
 }
 
 void myLoop(){
 	//maus
-	int fdm = open("/dev/input/mice", O_RDONLY | O_SYNC);
+	int fdm = open("/dev/input/mice", O_RDONLY);
 	if (fdm == -1) {
 		printf("ERROR: /dev/input/mice konnte nicht geoeffnet werden. Sind Sie root?\n");
 		exit(EXIT_FAILURE);
@@ -389,12 +379,12 @@ void myLoop(){
 			if(right!=' ') button = button + 2;
 			mouseOverApplegui(maus_x, (Yres-maus_y), button);
 		}
-//		if(paket[0] & 2)break;
+		if(paket[0] & 2 && !(paket[0]&1))break;
 	}
 }
 
 int main(){
-	if(1){ // inits Globalvariables and MyFB and the HardwareFB
+	if(1){ // inits AppleGui
 		for(int i=0; i<2; i++){ // Start- und Endpiont
 			Startpoint[i] = 0;
 			Endpoint[i] = 0;
@@ -406,7 +396,8 @@ int main(){
 		AppleGui.imin = -1.0;
 		AppleGui.imax = 1.0;
 		AppleGui.depth = 1000;
-
+	}
+	if(1){ //Fbp and Displayvariables
 		struct fb_fix_screeninfo finfo;
 		struct fb_var_screeninfo vinfo;
 		int fd = open("/dev/fb0", O_RDWR);
@@ -426,10 +417,11 @@ int main(){
 		}
 		close(fd);
 		BufferLenght = finfo.smem_len;
-		Bpp = vinfo.bits_per_pixel;
 		LineLenght = finfo.line_length;
 		Xres = vinfo.xres;
 		Yres = vinfo.yres;
+	}
+	if(1){ // malloc MyFB
 		MyFB = malloc(Xres * sizeof(uint8_t **));
 		if(NULL == MyFB) {
 			printf("Kein Speicher mehr fuer Zeilen");
@@ -458,8 +450,8 @@ int main(){
 	makeApfel();
 
 // TODO Gui
-	double* werte[] = {&AppleGui.rmax,&AppleGui.rmin};
-	gui_init(19, 49, werte, MyFB, &writeToFb);
+	
+	gui_init(0, 0, &AppleGui, MyFB, &writeToFb);
 	
 	printf("x = %d, y = %d, width = %d, height = %d\n", AppleGui.x, AppleGui.y, AppleGui.width, AppleGui.height);
 	
