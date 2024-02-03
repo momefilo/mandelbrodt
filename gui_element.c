@@ -85,7 +85,6 @@ void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *
 	MyHeight = ElemHeight * (ElemCount/ElemsInRow);
 	if(ElemCount%ElemsInRow != 0) MyHeight = MyHeight + ElemHeight;
 	MyWidth = ElemWidth * ElemsInRow;
-	printf("MODUL: X=%d, Y=%d, rmin=%.4f\n", XPos, YPos, (*Apple).rmin);
 	
 	if(1){// init ElemAreas
 		int yfak = 0;
@@ -99,7 +98,6 @@ void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *
 			// width/height
 			ElemAreas[i][2] = ElemWidth;
 			ElemAreas[i][3] = ElemHeight;
-			printf(" i=%d, x=%d, y=%d, w=%d, h=%d\n", i,ElemAreas[i][0],ElemAreas[i][1],ElemAreas[i][2],ElemAreas[i][3]);
 		}
 			
 		drawGraphic();

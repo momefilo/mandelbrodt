@@ -9,12 +9,15 @@
 #include <fcntl.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <sys/select.h>
 #include "gui_element.h"
 
 // the size and variables of the applepicture
 struct _AppleGui AppleGui;
 
 // Variablen
+int TextOffset = 330;
+bool GuiInit = false;
 int Startpoint[2], Endpoint[2]; // Zoomvariablen
 int BufferLenght, LineLenght;// Displayvariablen
 double Xres, Yres;// Displayvariablen
@@ -55,7 +58,6 @@ int getIterCount(double cr, double ci, int count){
 	}
 	return 0;
 }
-
 
 /* helper-Functions for makeApfel(). Initialisiert restliche globalel Variablen welche nicht in Main
  * initialisiert wurden */
@@ -126,10 +128,26 @@ void fillIterMember(){
 		}
 	}
 	quicksort(IterMember,0,CountsOfIter-1);
-	printf("CountsOfIter=%d\n",CountsOfIter);
+	uint8_t iterText[17];
+	uint8_t fgcolor[] = {255,255,255};
+	uint8_t bgcolor[] = {0,0,0};
+	sprintf(iterText, "I-Werte % 8d", CountsOfIter);
+	write_Text(2, TextOffset + 16, iterText, 16, fgcolor, bgcolor);
+	writeToFb(2, TextOffset+16, 16*16, 16);
 }
 
-
+void textFertig(bool fertig){
+	uint8_t *text = "Rechne";
+	if(fertig) text = "Fertig";
+	if(GuiInit){
+		uint8_t fgcolor[] = {255,255,255};
+		uint8_t bgcolor[] = {0,0,0};
+		uint8_t *leer = "                ";
+		write_Text(2, TextOffset-16, leer, 6, fgcolor, bgcolor);
+		write_Text(2, TextOffset-16, text, 6, fgcolor, bgcolor);
+		writeToFb(2, TextOffset-16, 16*16, 16);
+	}
+}
 /* Füllt MyApple mit Daten aus getIterCount() mithilfe der vier *fillBufX() Threadfuntionen und
  * skaliert diese mit AppleGui auf <= 5/4 des Displays und
  * schreibt die Skalierten Daten in MyFB und
@@ -147,7 +165,8 @@ static void *thrFunc(void* val){
 	return NULL;
 }
 void makeApfel(/*double xres, double yres, double min_r, double max_r, double min_i, double max_i, double depth*/){
-	
+	uint8_t *mytext = "Bitte Warten";
+	textFertig(false);
 	if(1){// alloc Memory for MyApple and IterMatrix
 		if( !(MyApple = realloc(MyApple, (AppleGui.xres * sizeof(uint8_t **))))){
 			printf("Speicherfehler Zeilen\n");
@@ -191,7 +210,6 @@ void makeApfel(/*double xres, double yres, double min_r, double max_r, double mi
 			}
 			prozent++;
 			double tmp = (100/(double)(AppleGui.xres/maxThr)) * prozent;
-			printf(" %d Prozent\n",(int)tmp);
 		}
 	}
 
@@ -251,10 +269,9 @@ void makeApfel(/*double xres, double yres, double min_r, double max_r, double mi
 	
 	//write MyFB to Display
 	writeToFb(AppleGui.x,AppleGui.y,AppleGui.width,AppleGui.height);
-	
-	fillIterMember();
+	uint8_t *mytext2 = "Fertig";
+	textFertig(true);
 }
-
 
 //GUI-Zoomfunktionen
 void drawRect(uint32_t color){
@@ -348,6 +365,7 @@ void myLoop(){
 	}
 	int maus_x = Xres/2, maus_y = Yres/2;
 	char paket[3];
+	char text[1];
 	while (1) {
 		// Datenpaket einlesen
 		read(fdm, paket, 3);
@@ -380,11 +398,13 @@ void myLoop(){
 			if(right!=' ') button = button + 2;
 			mouseOverApplegui(maus_x, (Yres-maus_y), button);
 		}
-//		if(paket[0] & 2 && !(paket[0]&1))break;
+		if( (paket[0] & 2) && (!(paket[0] & 1))) break;
+		
 	}
 }
 
 int main(){
+//	for(int i=0; i<100; i++)printf("\n");
 	if(1){ // inits AppleGui
 		for(int i=0; i<2; i++){ // Start- und Endpiont
 			Startpoint[i] = 0;
@@ -447,14 +467,11 @@ int main(){
 		}
 	}
 
-	// Zeichnet das Apfelmaenchen
 	makeApfel();
-
-// TODO Gui
 	
 	gui_init(0, 0, &AppleGui, MyFB, &writeToFb);
-	
-	printf("x = %d, y = %d, width = %d, height = %d\n", AppleGui.x, AppleGui.y, AppleGui.width, AppleGui.height);
+	GuiInit = true;
+	fillIterMember();
 	
 	myLoop();
 	
