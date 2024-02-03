@@ -11,8 +11,6 @@ void (*WriteFunc) (const int, ...);
 int ElemAreas[ElemCount][4];
 
 void write_font16x16(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *bgcolor){
-	//create buffer for font
-	uint8_t buf[16][16][3];
 	int myx = 0, myy = 0;
 	for(int i=0; i<32; i=i+1){ // 32 Byte umfasst ein 16x16Bit Zeichen
 		for(int k=0; k<8; k=k+1){ // Acht Bits pro Byte
@@ -30,26 +28,26 @@ void write_font16x16(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *b
 		}
 	}
 }
+void write_Text(int x, int y, uint8_t *text, int len, uint8_t *fgcolor, uint8_t *bgcolor){
+	for(int i=0; i<len; i++) write_font16x16(x+i*16, y, text[i], fgcolor, bgcolor);
+}
 void updateWert(int element){
 	char text[8];
-	int xpos = 0;
-	int ypos = 0;
 	switch(element){
-		case 0: sprintf(text, "% 8d", (*Apple).xres); xpos = 0; ypos = 35; break;
-		case 1: sprintf(text, "% 8d", (*Apple).yres);  xpos = ElemWidth; ypos = 35; break;
-		case 2: sprintf(text, "%.5f", (*Apple).rmin); xpos = 0; ypos = 101; break;
-		case 3: sprintf(text, "%.5f", (*Apple).rmax); xpos = ElemWidth; ypos = 101; break;
-		case 4: sprintf(text, "%.5f", (*Apple).imin); xpos = 0; ypos = 167; break;
-		case 5: sprintf(text, "%.5f", (*Apple).imax); xpos = ElemWidth; ypos = 167; break;
-		case 6: sprintf(text, "% 8d", (*Apple).depth); xpos = 0; ypos = 233; break;
+		case 0: sprintf(text, "% 8d", (*Apple).xres); break;
+		case 1: sprintf(text, "% 8d", (*Apple).yres); break;
+		case 2: sprintf(text, "%.5f", (*Apple).rmin); break;
+		case 3: sprintf(text, "%.5f", (*Apple).rmax); break;
+		case 4: sprintf(text, "%.5f", (*Apple).imin); break;
+		case 5: sprintf(text, "%.5f", (*Apple).imax); break;
+		case 6: sprintf(text, "% 8d", (*Apple).depth); break;
 		default: break;
 	}
-	for(int x=xpos+2; x<xpos+ElemWidth-2; x++)
-		for(int y=ypos; y<ypos+16; y++)
-			for(int i=0; i<3; i++) FBspiegel[x][y][i] = 0;
+	
 	uint8_t fgcolor[] = {200,255,0};
 	uint8_t bgcolor[] = {96,96,96};
-	for(int i=0; i<8; i++) write_font16x16(xpos+2+i*16, ypos, text[i], fgcolor, bgcolor);
+	for(int i=0; i<8; i++)
+		write_font16x16(ElemAreas[element][0]+2+i*16, ElemAreas[element][1]+35, text[i], fgcolor, bgcolor);
 }
 void updateWerte(){
 	for(int i=0; i<7; i++) updateWert(i);
@@ -77,13 +75,8 @@ void drawGraphic(){
 	uint8_t fgcolor[] = {255,200,0};
 	uint8_t bgcolor[] = {96,96,96};
 	char texte[][8]={"  X-Res ","  Y-Res ","  r-Min ","  r-Max ","  i-Min ","  i-Max ","  Depth "};
-	int yfak = 0;
 	for(int h=0; h<7; h++){
-		int xpos = XPos + ElemWidth + 2;
-		if(h % 2 == 0) xpos = XPos + 2;
-		int ypos = YPos + 2 + yfak * ElemHeight;
-		if((h+1) % 2 == 0) yfak++;
-		for(int i=0; i<8; i++) write_font16x16(xpos+i*16, ypos, texte[h][i], fgcolor, bgcolor);
+		for(int i=0; i<8; i++) write_font16x16(ElemAreas[h][0]+i*16+2, ElemAreas[h][1]+2, texte[h][i], fgcolor, bgcolor);
 	}
 	//TODO End
 	int tmp_h = ElemHeight * (ElemCount/ElemsInRow);

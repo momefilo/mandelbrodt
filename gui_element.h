@@ -18,6 +18,7 @@ struct _AppleGui {
 };
 
 void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *fbFunc);
+void write_Text(int x, int y, uint8_t *text, int len, uint8_t *fgcolor, uint8_t *bgcolor);
 void updateWerte();
 
 #endif
