@@ -4,7 +4,7 @@
 
 #define ElemCount 7
 
-int XPos, YPos, ElemWidth = 132, ElemHeight = 66, ElemsInRow = 2;
+int XPos, YPos, MyWidth, MyHeight, ElemWidth = 132, ElemHeight = 66, ElemsInRow = 2;
 struct _AppleGui *Apple;
 uint8_t *** FBspiegel;
 void (*WriteFunc) (const int, ...);
@@ -46,8 +46,7 @@ void updateWert(int element){
 	
 	uint8_t fgcolor[] = {200,255,0};
 	uint8_t bgcolor[] = {96,96,96};
-	for(int i=0; i<8; i++)
-		write_font16x16(ElemAreas[element][0]+2+i*16, ElemAreas[element][1]+35, text[i], fgcolor, bgcolor);
+	write_Text(ElemAreas[element][0]+2, ElemAreas[element][1]+35, text, 8, fgcolor, bgcolor);
 }
 void updateWerte(){
 	for(int i=0; i<7; i++) updateWert(i);
@@ -71,22 +70,21 @@ void drawGraphic(){
 		}
 	}
 	fclose(file);
-	//TODO Start
 	uint8_t fgcolor[] = {255,200,0};
 	uint8_t bgcolor[] = {96,96,96};
 	char texte[][8]={"  X-Res ","  Y-Res ","  r-Min ","  r-Max ","  i-Min ","  i-Max ","  Depth "};
-	for(int h=0; h<7; h++){
-		for(int i=0; i<8; i++) write_font16x16(ElemAreas[h][0]+i*16+2, ElemAreas[h][1]+2, texte[h][i], fgcolor, bgcolor);
-	}
-	//TODO End
-	int tmp_h = ElemHeight * (ElemCount/ElemsInRow);
-	if(ElemCount%ElemsInRow != 0) tmp_h++;
-	WriteFunc(XPos, YPos, ElemWidth * ElemsInRow, tmp_h);
+	for(int h=0; h<7; h++)
+		write_Text(ElemAreas[h][0]+2, ElemAreas[h][1]+2, texte[h], 8, fgcolor, bgcolor);
+
+	WriteFunc(XPos, YPos, MyWidth, MyHeight);
 }
 
 void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *fbFunc){
 	XPos = x; YPos = y; FBspiegel = fbBuf; WriteFunc = fbFunc;
 	Apple = appleGui;
+	MyHeight = ElemHeight * (ElemCount/ElemsInRow);
+	if(ElemCount%ElemsInRow != 0) MyHeight = MyHeight + ElemHeight;
+	MyWidth = ElemWidth * ElemsInRow;
 	printf("MODUL: X=%d, Y=%d, rmin=%.4f\n", XPos, YPos, (*Apple).rmin);
 	
 	if(1){// init ElemAreas
