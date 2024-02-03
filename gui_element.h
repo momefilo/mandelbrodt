@@ -18,5 +18,6 @@ struct _AppleGui {
 };
 
 void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *fbFunc);
+void updateWerte();
 
 #endif

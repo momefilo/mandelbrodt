@@ -329,6 +329,7 @@ void mouseOverApplegui(int x, int y, uint8_t button){
 		}
 		AppleGui.rmin=rmin; AppleGui.rmax=rmax;AppleGui.imin=imin;AppleGui.imax=imax;
 		makeApfel();
+		updateWerte();
 	}
 	else if(button == 0){// clear Start- Endpoint
 		Startpoint[0]=0;
