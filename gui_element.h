@@ -1,9 +1,6 @@
 #ifndef gui_element_h
 #define gui_element_h 1
 
-#define WIDTH 200
-#define HEIGHT 200
-
 #include <stdint.h>
 
 struct _AppleGui {

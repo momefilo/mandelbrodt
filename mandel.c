@@ -379,7 +379,7 @@ void myLoop(){
 			if(right!=' ') button = button + 2;
 			mouseOverApplegui(maus_x, (Yres-maus_y), button);
 		}
-		if(paket[0] & 2 && !(paket[0]&1))break;
+//		if(paket[0] & 2 && !(paket[0]&1))break;
 	}
 }
 
