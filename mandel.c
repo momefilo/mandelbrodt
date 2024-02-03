@@ -16,7 +16,7 @@
 struct _AppleGui AppleGui;
 
 // Variablen
-int TextOffset = 330;
+int TextOffset = 330, GuiX = 0, GuiY = 0;
 bool GuiInit = false;
 int Startpoint[2], Endpoint[2]; // Zoomvariablen
 int BufferLenght, LineLenght;// Displayvariablen
@@ -376,13 +376,16 @@ void myLoop(){
 		if (maus_x >= Xres) maus_x = Xres - 1;
 		if (maus_y >= Yres) maus_y = Yres - 1;
 
-		// Status der Maustasten dekodieren und ausgeben
+		// Status der Maustasten dekodieren
 		char left   = paket[0] & 1 ? 'L' : ' ';
 		char right  = paket[0] & 2 ? 'R' : ' ';
 //		char middle = paket[0] & 4 ? 'M' : ' ';
+
+		int tmp_height = ElemHeight * (ElemCount/ElemsInRow);
+		if(ElemCount%ElemsInRow != 0) tmp_height = tmp_height + ElemHeight;
 		writeToFb(0,0,Xres,Yres);
-		for(int i=0; i<4; i++){
-			for(int j=0; j<4; j++){
+		for(int i=0; i<6; i++){
+			for(int j=0; j<6; j++){
 				int myy = (Yres-(maus_y-j));
 				if(myy < 0) myy = 0;
 				if(myy >= Yres) myy = Yres-1;
@@ -392,13 +395,22 @@ void myLoop(){
 				FBP(myx, myy) = 0xFF00FF;
 			}
 		}
+		//AppleGui
 		if(maus_x >= AppleGui.x && (Yres-maus_y) <= AppleGui.height){
 			uint8_t button = 0;
 			if(left!=' ') button = 1;
 			if(right!=' ') button = button + 2;
 			mouseOverApplegui(maus_x, (Yres-maus_y), button);
 		}
-		if( (paket[0] & 2) && (!(paket[0] & 1))) break;
+		//gui_element
+		else if(maus_x > GuiX && maus_x < (GuiX+ElemWidth*ElemsInRow)
+			&& (Yres-maus_y) > GuiY && (Yres-maus_y) < (GuiY+tmp_height) ){
+			uint8_t button = 0;
+			if(left!=' ') button = 1;
+			if(right!=' ') button = button + 2;
+			gui_onMouseOver(maus_x, (Yres-maus_y), button);
+		}
+		else if( (paket[0] & 2) && (!(paket[0] & 1))) break;
 		
 	}
 }
@@ -469,7 +481,7 @@ int main(){
 
 	makeApfel();
 	
-	gui_init(0, 0, &AppleGui, MyFB, &writeToFb);
+	gui_init(GuiX, GuiY, &AppleGui, MyFB, &writeToFb);
 	GuiInit = true;
 	fillIterMember();
 	

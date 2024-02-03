@@ -2,9 +2,7 @@
 #include "graphics/font16x16.h"
 #include <stdio.h>
 
-#define ElemCount 7
-
-int XPos, YPos, MyWidth, MyHeight, ElemWidth = 132, ElemHeight = 66, ElemsInRow = 2;
+int XPos, YPos, MyWidth, MyHeight;
 struct _AppleGui *Apple;
 uint8_t *** FBspiegel;
 void (*WriteFunc) (const int, ...);
@@ -56,6 +54,55 @@ void updateWerte(){
 }
 
 //TODO
+void gui_onMouseOver(int x, int y, uint8_t button){
+	
+	//get element-id
+	int elem_id = -1;
+	if(y > YPos && y < ElemAreas[2][1]){
+		if(x < ElemAreas[1][0]) elem_id = 0; else elem_id = 1;}
+	else if(y > ElemAreas[2][1] && y < ElemAreas[4][1]){
+		if(x < ElemAreas[3][0]) elem_id = 2; else elem_id = 3;}
+	else if(y > ElemAreas[4][1] && y < ElemAreas[6][1]){
+		if(x < ElemAreas[5][0]) elem_id = 4; else elem_id = 5;}
+	else if(y > ElemAreas[6][1] && y < ElemAreas[6][1]+ElemAreas[6][3]){
+		if(x < ElemAreas[6][0]+ElemAreas[6][2]) elem_id = 6;}
+
+	//get plus or minus and summand
+	int minus = -1;
+	int sum = -1;
+	if(elem_id > -1){
+		if(y > (ElemAreas[elem_id][1] + 18) 
+			&& y < (ElemAreas[elem_id][1] + 18 + 14)) minus = 0;
+		else if(y > (ElemAreas[elem_id][1] + 51)
+			&& y < (ElemAreas[elem_id][1] + 51 + 14)) minus = 1;
+		
+		if(x > (ElemAreas[elem_id][0] + 2)
+			&& x < (ElemAreas[elem_id][0] + 34)) sum = 1;
+		else if(x > (ElemAreas[elem_id][0] + 34)
+			&& x < (ElemAreas[elem_id][0] + 66)) sum = 100;
+		else if(x > (ElemAreas[elem_id][0] + 66)
+			&& x < (ElemAreas[elem_id][0] + 98)) sum = 10000;
+		else if(x > (ElemAreas[elem_id][0] + 98)
+			&& x < (ElemAreas[elem_id][0] + 130)) sum = 100000;
+	}
+	if(button == 1 && elem_id > -1 && minus > -1 && sum > -1){
+		if(elem_id > 1 && elem_id <6 && sum > 1) sum = 1;
+		if(minus > 0) sum = sum * -1;
+		int itmp;
+		switch(elem_id){
+			case 0: itmp = Apple->xres; itmp += sum; Apple->xres = itmp; break;
+			case 1: itmp = Apple->yres; itmp += sum; Apple->yres = itmp; break;
+			case 2: itmp = Apple->rmin; itmp += sum; Apple->rmin = itmp; break;
+			case 3: itmp = Apple->rmax; itmp += sum; Apple->rmax = itmp; break;
+			case 4: itmp = Apple->imin; itmp += sum; Apple->imin = itmp; break;
+			case 5: itmp = Apple->imax; itmp += sum; Apple->imax = itmp; break;
+			case 6: itmp = Apple->depth; itmp += sum; Apple->depth = itmp; break;
+		}
+//		printf("ID = %d, sum = %d\n", elem_id, sum);
+		updateWert(elem_id);
+	}
+}
+
 void drawGraphic(){
 	FILE *file = fopen("graphics/element.data","rb");
 	if( !file){printf("Kann Graphik nicht oeffnen\n");return;}
