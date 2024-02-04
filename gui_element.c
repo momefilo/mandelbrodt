@@ -6,6 +6,8 @@ int XPos, YPos, MyWidth, MyHeight;
 struct _AppleGui *Apple;
 uint8_t *** FBspiegel;
 void (*WriteFunc) (const int, ...);
+void (*CalcFunc) ();
+void (*SortFunc) ();
 int ElemAreas[ElemCount][4];
 
 void write_font16x16(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *bgcolor){
@@ -53,10 +55,9 @@ void updateWerte(){
 	WriteFunc(XPos, YPos, ElemWidth * ElemsInRow, tmp_h);
 }
 
-//TODO
 void gui_onMouseOver(int x, int y, uint8_t button){
 	
-	//get element-id
+	//get element-id (0 bis ElemCount-1. Buttons = -2)
 	int elem_id = -1;
 	if(y > YPos && y < ElemAreas[2][1]){
 		if(x < ElemAreas[1][0]) elem_id = 0; else elem_id = 1;}
@@ -65,7 +66,7 @@ void gui_onMouseOver(int x, int y, uint8_t button){
 	else if(y > ElemAreas[4][1] && y < ElemAreas[6][1]){
 		if(x < ElemAreas[5][0]) elem_id = 4; else elem_id = 5;}
 	else if(y > ElemAreas[6][1] && y < ElemAreas[6][1]+ElemAreas[6][3]){
-		if(x < ElemAreas[6][0]+ElemAreas[6][2]) elem_id = 6;}
+		if(x < ElemAreas[6][0]+ElemAreas[6][2]) elem_id = 6; else elem_id = -2;}
 
 	//get plus or minus and summand
 	int minus = -1;
@@ -85,7 +86,28 @@ void gui_onMouseOver(int x, int y, uint8_t button){
 		else if(x > (ElemAreas[elem_id][0] + 98)
 			&& x < (ElemAreas[elem_id][0] + 130)) sum = 100000;
 	}
-	if(button == 1 && elem_id > -1 && minus > -1 && sum > -1){
+	else if(elem_id < -1){// get the Button
+		if(y > (ElemAreas[ElemCount-1][1] + 2) 
+			&& y < (ElemAreas[ElemCount-1][1] + 33)) minus = 0;
+		else if(y > (ElemAreas[ElemCount-1][1] + 33)
+			&& y < (ElemAreas[elem_id][1] + 64)) minus = 1;
+			
+		if(x > (ElemAreas[ElemCount-1][0]+132 + 2)
+			&& x < (ElemAreas[ElemCount-1][0]+132 + 45)) sum = 0;
+		else if(x > (ElemAreas[ElemCount-1][0]+132 + 45)
+			&& x < (ElemAreas[ElemCount-1][0]+132 + 87)) sum = 1;
+		else if(x > (ElemAreas[ElemCount-1][0]+132 + 87)
+			&& x < (ElemAreas[ElemCount-1][0]+132 + 128)) sum = 2;
+	}
+	if(button == 1 && elem_id < -1 && minus > -1 && sum > -1){ //buttons
+		if(minus == 0){
+			switch (sum) {
+				case 0: CalcFunc(); break;
+				case 1: SortFunc(); break;
+			}
+		}
+	}
+	else if(button == 1 && elem_id > -1 && minus > -1 && sum > -1){ // Analogwerte
 		if(elem_id > 1 && elem_id <6 && sum > 1) sum = 1;
 		if(minus > 0) sum = sum * -1;
 		int itmp;
@@ -98,7 +120,6 @@ void gui_onMouseOver(int x, int y, uint8_t button){
 			case 5: itmp = Apple->imax; itmp += sum; Apple->imax = itmp; break;
 			case 6: itmp = Apple->depth; itmp += sum; Apple->depth = itmp; break;
 		}
-//		printf("ID = %d, sum = %d\n", elem_id, sum);
 		updateWert(elem_id);
 	}
 }
@@ -111,7 +132,6 @@ void drawGraphic(){
 		fseek(file,0,SEEK_SET);
 		for(int x=ElemAreas[i][0]; x<ElemAreas[i][0] + ElemAreas[i][2]; x++){
 			for(int y=ElemAreas[i][1]; y<ElemAreas[i][1] + ElemAreas[i][3]; y++){
-				uint8_t *color[3];
 				for(int c=0; c<3; c++) fread(&FBspiegel[x][y][c], sizeof(uint8_t),1,file);
 			}
 		}
@@ -122,12 +142,22 @@ void drawGraphic(){
 	char texte[][8]={"  X-Res ","  Y-Res ","  r-Min ","  r-Max ","  i-Min ","  i-Max ","  Depth "};
 	for(int h=0; h<7; h++)
 		write_Text(ElemAreas[h][0]+2, ElemAreas[h][1]+2, texte[h], 8, fgcolor, bgcolor);
-
+		
+	FILE *bfile = fopen("graphics/button.data","rb");
+	if( !bfile){printf("Kann Buton nicht oeffnen\n");return;}
+	int startx = ElemAreas[ElemCount-1][0] + ElemAreas[ElemCount-1][2];
+	int starty = ElemAreas[ElemCount-1][1];
+	for(int x=startx; x<startx+ ElemWidth; x++){
+		for(int y=ElemAreas[ElemCount-1][1]; y<ElemAreas[ElemCount-1][1] + ElemHeight; y++){
+			for(int c=0; c<3; c++) fread(&FBspiegel[x][y][c], sizeof(uint8_t),1,bfile);
+		}
+	}
 	WriteFunc(XPos, YPos, MyWidth, MyHeight);
 }
 
-void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *fbFunc){
-	XPos = x; YPos = y; FBspiegel = fbBuf; WriteFunc = fbFunc;
+void gui_init(int x, int y, struct _AppleGui *appleGui, \
+			uint8_t ***fbBuf, void *fbFunc, void *calcFunc, void *sortFunc){
+	XPos=x; YPos=y; FBspiegel=fbBuf; WriteFunc=fbFunc; CalcFunc=calcFunc; SortFunc=sortFunc;
 	Apple = appleGui;
 	MyHeight = ElemHeight * (ElemCount/ElemsInRow);
 	if(ElemCount%ElemsInRow != 0) MyHeight = MyHeight + ElemHeight;

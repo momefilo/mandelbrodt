@@ -22,7 +22,8 @@ struct _AppleGui {
 	double imax;
 };
 
-void gui_init(int x, int y, struct _AppleGui *appleGui, uint8_t ***fbBuf, void *fbFunc);
+void gui_init(int x, int y, struct _AppleGui *appleGui, \
+			uint8_t ***fbBuf, void *fbFunc, void *calcFunc, void *sortFunc);
 void write_Text(int x, int y, uint8_t *text, int len, uint8_t *fgcolor, uint8_t *bgcolor);
 void gui_onMouseOver(int x, int y, uint8_t button);
 void updateWerte();
