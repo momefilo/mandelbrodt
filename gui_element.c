@@ -86,7 +86,7 @@ void gui_onMouseOver(int x, int y, uint8_t button){
 		else if(x > (ElemAreas[elem_id][0] + 98)
 			&& x < (ElemAreas[elem_id][0] + 130)) sum = 100000;
 	}
-	else if(elem_id < -1){// get the Button
+	else if(elem_id < -1){// the Button-Element
 		if(y > (ElemAreas[ElemCount-1][1] + 2) 
 			&& y < (ElemAreas[ElemCount-1][1] + 33)) minus = 0;
 		else if(y > (ElemAreas[ElemCount-1][1] + 33)
@@ -99,7 +99,7 @@ void gui_onMouseOver(int x, int y, uint8_t button){
 		else if(x > (ElemAreas[ElemCount-1][0]+132 + 87)
 			&& x < (ElemAreas[ElemCount-1][0]+132 + 128)) sum = 2;
 	}
-	if(button == 1 && elem_id < -1 && minus > -1 && sum > -1){ //buttons
+	if(button == 1 && elem_id < -1 && minus > -1 && sum > -1){ //klick Buttons-Element
 		if(minus == 0){
 			switch (sum) {
 				case 0: CalcFunc(); break;
