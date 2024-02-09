@@ -16,7 +16,7 @@
 struct _AppleGui AppleGui;
 
 // Variablen
-int TextOffset = 330, GuiX = 0, GuiY = 0;
+int GuiX = 0, GuiY = 0, GuiWidth, GuiHeight;
 bool GuiInit = false;
 int Startpoint[2], Endpoint[2]; // Zoomvariablen
 int BufferLenght, LineLenght;// Displayvariablen
@@ -27,7 +27,9 @@ uint8_t ***MyApple; // Farbwerte des des auf AppleGui skalierten Apfelmaenchen
 int **IterMatrix; // Iterationswerte aller Pixel des unskalierten Apfelmaenchen
 int CountsOfIter;// Anzahl der Iterationswerte
 int **IterMember;//[CountsOfIter][2] 0= anzahl Iterationswerte, 1= Anzahl Member der Iter-werte
-
+int *OneMembers;
+int *TenMembers;
+int MaxMembers[2][2] = {{0,0},{0,0}};
 // writes a in Parameters defined Area from MyFB to Hardware-FB (the Screen)
 void *writeToFb(int x, int y, int width, int height){
 	#define FBP(myx, myy) Fbp[myx + myy*(LineLenght >> 2)]
@@ -38,6 +40,29 @@ void *writeToFb(int x, int y, int width, int height){
 	}
 }
 
+//statusausgabe
+void textFertig(bool fertig){
+	uint8_t *text = "Rechne";
+	if(fertig) text = "Fertig";
+	if(GuiInit){
+		uint8_t fgcolor[] = {255,255,255};
+		uint8_t bgcolor[] = {0,0,0};
+		write_Text(2, GuiHeight + 20, text, 6, fgcolor, bgcolor, 16);
+		writeToFb(2, GuiHeight + 20, 16*16, 16);
+	}
+}
+void textComplex(double r, double i){
+	if(GuiInit){
+		uint8_t text[2][30];
+		uint8_t fgcolor[] = {255,255,255};
+		uint8_t bgcolor[] = {0,0,0};
+		sprintf(text[0], "r = %.24f", r);
+		sprintf(text[1], "i = %.24f", i);
+		write_Text(2, GuiHeight, text[0], 30, fgcolor, bgcolor,8);
+		write_Text(2, GuiHeight + 8, text[1], 30, fgcolor, bgcolor,8);
+		writeToFb(2, GuiHeight, 8*30, 16);
+	}
+}
 
 /* gibt die anzahl an Iterationenen bis zur Abbruchbedingung der Mandelbrodtmenge,
  * oder 0 wenn (cr|ci) nicht in der Mandelbrodtmenge ist, zurueck*/
@@ -59,22 +84,7 @@ int getIterCount(double cr, double ci, int count){
 	return 0;
 }
 
-//statusausgabe
-void textFertig(bool fertig){
-	uint8_t *text = "Rechne";
-	if(fertig) text = "Fertig";
-	if(GuiInit){
-		uint8_t fgcolor[] = {255,255,255};
-		uint8_t bgcolor[] = {0,0,0};
-		uint8_t *leer = "                ";
-		write_Text(2, TextOffset-16, leer, 6, fgcolor, bgcolor);
-		write_Text(2, TextOffset-16, text, 6, fgcolor, bgcolor);
-		writeToFb(2, TextOffset-16, 16*16, 16);
-	}
-}
-
-/* helper-Functions for makeApfel(). Initialisiert restliche globalel Variablen welche nicht in Main
- * initialisiert wurden */
+/* sortFunk */
 void quicksort(int *number[],int first,int last){
 	int i, j, pivot, temp1, temp2;
 	if(first<last){
@@ -105,9 +115,45 @@ void quicksort(int *number[],int first,int last){
 	quicksort(number,j+1,last);
 	}
 }
+
+void getSmallMembers(){
+	int sm0 = 0, sm1 = 0;
+	for(int i=0; i<CountsOfIter; i++){
+		if(IterMember[i][1] < 2){
+			sm0++;
+			if( !(OneMembers = realloc(OneMembers,(sm0 * sizeof(int))))){
+				printf("Speicherfehler OneMember=%d\n", i);
+				return;}
+			OneMembers[sm0-1] = IterMember[i][0];
+		}
+		else if(IterMember[i][1] < 11){
+			sm1++;
+			if( !(TenMembers = realloc(TenMembers,(sm1 * sizeof(int))))){
+				printf("Speicherfehler TenMember=%d\n", i);
+				return;}
+			TenMembers[sm1-1] = IterMember[i][0];
+		}
+	}
+	uint8_t text[6][16];
+	uint8_t fgcolor[] = {255,255,255};
+	uint8_t bgcolor[] = {0,0,0};
+	sprintf(text[0], "One = % 10d", sm0);
+	sprintf(text[1], "Ten = % 10d", sm1);
+	sprintf(text[2], "Max = % 10d", IterMember[CountsOfIter-1][1]);
+	sprintf(text[3], "Itr = % 10d", IterMember[CountsOfIter-1][0]);
+	sprintf(text[4], "Max2= % 10d", IterMember[CountsOfIter-2][1]);
+	sprintf(text[5], "Itr2= % 10d", IterMember[CountsOfIter-2][0]);
+	write_Text(2, GuiHeight + 60, text[0], 16, fgcolor, bgcolor,16);
+	write_Text(2, GuiHeight + 80, text[1], 16, fgcolor, bgcolor,16);
+	write_Text(2, GuiHeight + 100, text[2], 16, fgcolor, bgcolor,16);
+	write_Text(2, GuiHeight + 120, text[3], 16, fgcolor, bgcolor,16);
+	write_Text(2, GuiHeight + 140, text[4], 16, fgcolor, bgcolor,16);
+	write_Text(2, GuiHeight + 160, text[5], 16, fgcolor, bgcolor,16);
+	writeToFb(2, GuiHeight + 60, 16*16, 120);
+}
 void *fillIterMember(){
 	textFertig(false);
-	int CountsOfIter = 0;
+	CountsOfIter = 0;
 	for(int x=0; x<AppleGui.xres; x++){
 		for(int y=0; y<AppleGui.yres; y++){
 			bool inarray = false;
@@ -147,12 +193,13 @@ void *fillIterMember(){
 	uint8_t fgcolor[] = {255,255,255};
 	uint8_t bgcolor[] = {0,0,0};
 	sprintf(iterText, "I-Werte % 8d", CountsOfIter);
-	write_Text(2, TextOffset - 40, iterText, 16, fgcolor, bgcolor);
-	writeToFb(2, TextOffset - 40, 16*16, 16);
+	write_Text(2, GuiHeight + 40, iterText, 16, fgcolor, bgcolor, 16);
+	writeToFb(2, GuiHeight + 40, 16*16, 16);
+	getSmallMembers();
 	textFertig(true);
 }
 
-/* Füllt MyApple mit Daten aus getIterCount() mithilfe der vier *fillBufX() Threadfuntionen und
+/* calcFunk. Füllt MyApple mit Daten aus getIterCount() mithilfe der *thrfunc und
  * skaliert diese mit AppleGui auf <= 5/4 des Displays und
  * schreibt die Skalierten Daten in MyFB und
  * sendet diese mit writeToFb() auf das Display*/
@@ -276,18 +323,6 @@ void *makeApfel(){
 }
 
 //GUI-Zoomfunktionen
-void textComplex(double r, double i){
-	if(GuiInit){
-		uint8_t text[2][30];
-		uint8_t fgcolor[] = {255,255,255};
-		uint8_t bgcolor[] = {0,0,0};
-		sprintf(text[0], "r = %.24f", r);
-		sprintf(text[1], "i = %.24f", i);
-		write_Text(AppleGui.x, AppleGui.height, text[0], 30, fgcolor, bgcolor);
-		write_Text(AppleGui.x, AppleGui.height + 24, text[1], 30, fgcolor, bgcolor);
-		writeToFb(AppleGui.x, AppleGui.height + 40, 16*16, 40);
-	}
-}
 void drawRect(uint32_t color){
 	int xstart = Startpoint[0], xend = Endpoint[0], ystart = Startpoint[1], yend = Endpoint[1];
 	if(xend < xstart){
@@ -501,9 +536,9 @@ int main(){
 			}
 		}
 	}
-
 	makeApfel();
-	
+	GuiWidth = ElemWidth * ElemsInRow;
+	GuiHeight = ElemHeight * ((ElemCount / ElemsInRow) + 1);
 	gui_init(GuiX, GuiY, &AppleGui, MyFB, &writeToFb, &makeApfel, &fillIterMember);
 	GuiInit = true;
 //	fillIterMember();

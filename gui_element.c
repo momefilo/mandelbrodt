@@ -1,5 +1,6 @@
 #include "gui_element.h"
 #include "graphics/font16x16.h"
+#include "graphics/font8x8.h"
 #include <stdio.h>
 
 int XPos, YPos, MyWidth, MyHeight;
@@ -10,6 +11,23 @@ void (*CalcFunc) ();
 void (*SortFunc) ();
 int ElemAreas[ElemCount][4];
 
+// zeichen < 128
+void write_font8x8(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *bgcolor){
+	int myy = 0;
+	for(int i=0; i<8; i=i+1){ // 8 Byte umfasst ein 8x8Bit Zeichen
+		int myx = 0;
+		for(int k=7; k>=0; k=k-1){ // Acht Bits pro Byte
+			if(FONT8x8[zeichen][i] & (0x80 >> k)){ // ist das Bit gesetzt
+				for(int m=0; m<3; m++)FBspiegel[x + myx][y + myy][m] = fgcolor[m];
+			}
+			else{ // Das Bit ist nicht gesetzt
+				for(int m=0; m<3; m++)FBspiegel[x + myx][y + myy][m] = bgcolor[m];
+			}
+			myx++;
+		}
+		myy++;
+	}
+}
 void write_font16x16(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *bgcolor){
 	int myx = 0, myy = 0;
 	for(int i=0; i<32; i=i+1){ // 32 Byte umfasst ein 16x16Bit Zeichen
@@ -28,8 +46,11 @@ void write_font16x16(int x, int y, uint8_t zeichen, uint8_t *fgcolor, uint8_t *b
 		}
 	}
 }
-void write_Text(int x, int y, uint8_t *text, int len, uint8_t *fgcolor, uint8_t *bgcolor){
-	for(int i=0; i<len; i++) write_font16x16(x+i*16, y, text[i], fgcolor, bgcolor);
+void write_Text(int x, int y, uint8_t *text, int len, uint8_t *fgcolor, uint8_t *bgcolor, uint8_t size){
+	if(size == 8)
+		for(int i=0; i<len; i++) write_font8x8(x+i*8, y, text[i], fgcolor, bgcolor);
+	else if(size == 16)
+		for(int i=0; i<len; i++) write_font16x16(x+i*16, y, text[i], fgcolor, bgcolor);
 }
 void updateWert(int element){
 	char text[8];
@@ -46,7 +67,7 @@ void updateWert(int element){
 	
 	uint8_t fgcolor[] = {200,255,0};
 	uint8_t bgcolor[] = {96,96,96};
-	write_Text(ElemAreas[element][0]+2, ElemAreas[element][1]+35, text, 8, fgcolor, bgcolor);
+	write_Text(ElemAreas[element][0]+2, ElemAreas[element][1]+35, text, 8, fgcolor, bgcolor, 16);
 }
 void updateWerte(){
 	for(int i=0; i<7; i++) updateWert(i);
@@ -141,7 +162,7 @@ void drawGraphic(){
 	uint8_t bgcolor[] = {96,96,96};
 	char texte[][8]={"  X-Res ","  Y-Res ","  r-Min ","  r-Max ","  i-Min ","  i-Max ","  Depth "};
 	for(int h=0; h<7; h++)
-		write_Text(ElemAreas[h][0]+2, ElemAreas[h][1]+2, texte[h], 8, fgcolor, bgcolor);
+		write_Text(ElemAreas[h][0]+2, ElemAreas[h][1]+2, texte[h], 8, fgcolor, bgcolor,16);
 		
 	FILE *bfile = fopen("graphics/button.data","rb");
 	if( !bfile){printf("Kann Buton nicht oeffnen\n");return;}
