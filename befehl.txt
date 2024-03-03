@@ -2,7 +2,7 @@ compile:
 gcc -lpthread mandel.c -o mandel -Wall
 get the console:
 sudo fgconsole // returns integer x
-sudo chvt (x+1) // login to console + 1
+sudo chvt (y) // login to console y<7 && y!=x
 login as momefilo and run programm:
 mandelbrodt/mandel
 to log out run:

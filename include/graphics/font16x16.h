@@ -1,3 +1,5 @@
+#ifndef font16x16_h
+#define font16x16_h 1
 unsigned char FONT16x16[] = { // 256 ASCII-Zeichen
     /*
      * code=0, hex=0x00, ascii="^@"
@@ -5119,3 +5121,4 @@ unsigned char FONT16x16[] = { // 256 ASCII-Zeichen
     0x00,0x00,  /* 000000000000 */
     0x00,0x00,  /* 000000000000 */
 };
+#endif
