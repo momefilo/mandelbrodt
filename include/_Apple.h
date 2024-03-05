@@ -20,6 +20,7 @@ public:
 	long double imin{-1};
 	long double imax{1};
 	int depth{100};
+	int **iterMembers, *oneMembers, *tenMembers, countsOfIter;
 	_Apple(_Userinterface &_ui);
 	~_Apple();
 	void paint();

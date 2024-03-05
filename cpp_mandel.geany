@@ -28,8 +28,14 @@ long_line_behaviour=1
 long_line_column=100
 
 [files]
-current_page=0
-FILE_NAME_0=184;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
+current_page=1
+FILE_NAME_0=705;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
+FILE_NAME_1=3813;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.cpp;0;4
+FILE_NAME_2=600;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.h;0;4
+FILE_NAME_3=1139;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.cpp;0;4
+FILE_NAME_4=405;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.h;0;4
+FILE_NAME_5=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Userinterface.h;0;4
+FILE_NAME_6=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Display.h;0;4
 
 [VTE]
 last_dir=/home/momefilo
@@ -39,3 +45,6 @@ C++FT_01_LB=_Build
 C++FT_01_CM=g++ -Wall -o "%e" "%f"
 C++FT_01_WD=/home/momefilo/pico/projekte/remote/mandelbrodt/
 filetypes=C++;
+NF_00_LB=_Make
+NF_00_CM=make
+NF_00_WD=/home/momefilo/pico/projekte/remote/mandelbrodt/

@@ -48,7 +48,7 @@ void _Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int co
 
 void _Userinterface::drawGraphic(){
 	FILE *efile = fopen("include/graphics/element.data","rb");
-	if( !efile){printf("Kann eGraphik nicht oeffnen\n");return;}
+	if( !efile){return;}
 	for(int i=0; i<elem_count; i++){
 		int inRow = 1;
 		fseek(efile,0,SEEK_SET);
@@ -69,7 +69,7 @@ void _Userinterface::drawGraphic(){
 		writeText(elements[h].x, elements[h].y, texte[h], 8, fgfarbe, bgfarbe,16, true);
 		
 	FILE *bfile = fopen("include/graphics/button_1.data","rb");
-	if( !bfile){printf("Kann bGraphik nicht oeffnen\n");return;}
+	if( !bfile){return;}
 	int startx = elements[elem_count-1].x + elem_width;
 	int starty = elements[elem_count-1].y;
 	for(int x=startx; x<startx+ elem_width; x++){

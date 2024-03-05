@@ -6,10 +6,8 @@ _Display::_Display(){
 	fbfile = open("/dev/fb0", O_RDWR);
 	if (fbfile) {
 		//read device-info to Vinfo ND Finfo
-		if (ioctl(fbfile, FBIOGET_FSCREENINFO, &Finfo)){
-			printf("Error reading fixed information.\n");}
-		if (ioctl(fbfile, FBIOGET_VSCREENINFO, &Vinfo)){
-			printf("Error reading variable information.\n");}
+		if (ioctl(fbfile, FBIOGET_FSCREENINFO, &Finfo)){return;}
+		if (ioctl(fbfile, FBIOGET_VSCREENINFO, &Vinfo)){return;}
 			
 		xres = Vinfo.xres;
 		yres = Vinfo.yres;
@@ -23,15 +21,16 @@ _Display::_Display(){
 				MAP_SHARED, 
 				fbfile, 0);
 		
-		//alloc Fbspiegel
-		if( !(fbspiegel = (uint8_t*)malloc(bufferlenght * sizeof(uint8_t)))){
-			printf("Failed to alloc Fbspiegel.\n");}
+		//alloc fbspiegel
+		if( !(fbspiegel = (uint8_t*)malloc(bufferlenght * sizeof(uint8_t)))){return;}
 	}
 }
 
 _Display::~_Display(){
 	munmap(fbpointer, bufferlenght);
 	close(fbfile);
+	free(fbpointer);
+	free(fbspiegel);
 }
 
 void _Display::putDisplay(int x, int y, int color){

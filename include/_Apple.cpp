@@ -19,7 +19,7 @@ int getIterCount(double cr, double ci, int count){
 	}
 	return 0;
 }
-int **thr_matrix, **thr_colors, **iterMembers, *oneMembers, *tenMembers, countsOfIter;
+int **thr_matrix, **thr_colors;
 int thr_yres;
 int thr_depth;
 long double delta_r;
@@ -39,6 +39,8 @@ static void *thrFunc(void* val){
 
 void _Apple::calc(){// start <=10 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
+	thr_matrix = NULL;
+	thr_colors = 
 	thr_matrix = (int**)malloc(xres * sizeof(int**));
 	thr_colors = (int**)malloc(xres * sizeof(int**));
 	for(int i=0; i<xres; i++){
@@ -107,6 +109,9 @@ void quicksort(int *number[],int first,int last){
 void _Apple::sort(){
 	ui->textFertig(false);
 	countsOfIter = 0;
+	iterMembers = NULL;
+	oneMembers = NULL;
+	tenMembers = NULL;
 	for(int x=0; x<xres; x++){
 		for(int y=0; y<yres; y++){
 			bool inarray = false;
@@ -175,7 +180,15 @@ void _Apple::sort(){
 _Apple::_Apple(_Userinterface &_ui){
 	ui = &_ui;	
 }
-_Apple::~_Apple(){}
+_Apple::~_Apple(){
+	free(thr_matrix);
+	free(thr_colors);
+	free(iterMembers);
+	free(oneMembers);
+	free(tenMembers);
+	free(matrix);
+	free(colormatrix);
+}
 
 void _Apple::clearScreen(){
 	for(int x=xpos; x<xpos+width; x++)
