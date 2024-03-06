@@ -40,9 +40,9 @@ static void *thrFunc(void* val){
 void _Apple::calc(){// start <=10 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
 	thr_matrix = NULL;
-	thr_colors = 
-	thr_matrix = (int**)malloc(xres * sizeof(int**));
-	thr_colors = (int**)malloc(xres * sizeof(int**));
+	thr_colors = NULL;
+	thr_matrix = (int**)malloc(xres * sizeof(int*));
+	thr_colors = (int**)malloc(xres * sizeof(int*));
 	for(int i=0; i<xres; i++){
 		thr_matrix[i] = (int*)malloc(yres * sizeof(int));
 		thr_colors[i] = (int*)malloc(yres * sizeof(int));
@@ -166,14 +166,16 @@ void _Apple::sort(){
 	sprintf(text[1], "Ten = % 10d", sm1);
 	sprintf(text[2], "Max = % 10d", iterMembers[countsOfIter-1][1]);
 	sprintf(text[3], "Itr = % 10d", iterMembers[countsOfIter-1][0]);
-	sprintf(text[4], "Max2= % 10d", iterMembers[countsOfIter-2][1]);
-	sprintf(text[5], "Itr2= % 10d", iterMembers[countsOfIter-2][0]);
+	if(countsOfIter>1){
+		sprintf(text[4], "Max2= % 10d", iterMembers[countsOfIter-2][1]);
+		sprintf(text[5], "Itr2= % 10d", iterMembers[countsOfIter-2][0]);
+		ui->writeText(2, ui->height + 140, text[4], 16, fgcolor, bgcolor,16, true);
+		ui->writeText(2, ui->height + 160, text[5], 16, fgcolor, bgcolor,16, true);
+	}
 	ui->writeText(2, ui->height + 60, text[0], 16, fgcolor, bgcolor,16, true);
 	ui->writeText(2, ui->height + 80, text[1], 16, fgcolor, bgcolor,16, true);
 	ui->writeText(2, ui->height + 100, text[2], 16, fgcolor, bgcolor,16, true);
 	ui->writeText(2, ui->height + 120, text[3], 16, fgcolor, bgcolor,16, true);
-	ui->writeText(2, ui->height + 140, text[4], 16, fgcolor, bgcolor,16, true);
-	ui->writeText(2, ui->height + 160, text[5], 16, fgcolor, bgcolor,16, true);
 	ui->textFertig(true);
 }
 

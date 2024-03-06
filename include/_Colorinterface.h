@@ -1,23 +1,31 @@
 #ifndef _Colorinterface_h
 #define _Colorinterface_h 1
 #include "_Apple.h"
-#include <string>
-#include <vector>
+
+struct _Farbverlauf{
+	int startcolor{0x00000000};
+	int endtcolor{0x00000000};
+	int startiter;
+	int enditer;
+};
 
 struct _CiElement{
 	int x;
 	int y;
 	int color{0x00000000};
+	int members{1};
 	int id;
+	bool verlauf{false};
 };
 
 class _Colorinterface{
 private:
 	std::vector<struct _CiElement> elements;
+	std::vector<struct _CiElement> colorgradients;
 	int elem_width{66};
 	int elem_height{Reglerheight};
 	int text_height{30};
-	int border{30};
+	int border{66};
 	int satz, satzcount, satzakt, satzrest;
 public:
 	_Apple *Apple;
@@ -32,6 +40,8 @@ public:
 	void showSatz(int id);
 	int getColor(int id);
 	void onMouseOver(int x, int y, int taste);
+	void drawVerlauf();
+	void makeVerlauf();
 };
 
 #endif

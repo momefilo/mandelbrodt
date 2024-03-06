@@ -13,6 +13,8 @@
 #include <sys/mman.h>
 #include <functional>
 #include <iostream>
+#include <string>
+#include <vector>
 
 class _Display{
 	

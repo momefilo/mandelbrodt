@@ -3,8 +3,6 @@
 #include "_Userinterface.h"
 class _Apple{
 private:
-	int **matrix;
-	int **colormatrix;
 	int Startpoint[2]{0,0};
 	int Endpoint[2]{0,0};
 public:
@@ -20,6 +18,8 @@ public:
 	long double imin{-1};
 	long double imax{1};
 	int depth{100};
+	int **matrix;
+	int **colormatrix;
 	int **iterMembers, *oneMembers, *tenMembers, countsOfIter;
 	_Apple(_Userinterface &_ui);
 	~_Apple();

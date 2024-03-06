@@ -138,8 +138,11 @@ void _Userinterface::textComplex(double r, double i){
 }
 void _Userinterface::textFertig(bool fertig){
 	char text[] = "Rechne";
-	if(fertig) sprintf(text, "Fertig");
-	int fgcolor = 0x00FFFFFF;
+	int fgcolor = 0x00FF0000;
+	if(fertig){
+		sprintf(text, "Fertig");
+		fgcolor = 0x0000FF00;
+	}
 	int bgcolor = 0x00000000;
 	writeText(2, height + 20, text, 6, fgcolor, bgcolor, 16, true);
 }
