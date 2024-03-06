@@ -183,7 +183,13 @@ void _Colorinterface::onMouseOver(int x, int y, int taste){
 	if(elem_id > -1 && elem_id < Apple->countsOfIter){
 		if( (x) - elements.at(elem_id).x < (elem_width-4)/3) {color = 2;}
 		else if( (x) - elements.at(elem_id).x < (elem_width-4)/3*2) {color = 1;}
-		if(y>ypos+text_height/2+2 // click to add gradient
+		if(y>ypos 
+				&& y< ypos+text_height/2+2
+				&& taste==1){// change color to zero
+			elements.at(elem_id).color = 0;
+			drawElem(elem_id, elem_id - satzakt * satz);
+		}
+		else if(y>ypos+text_height/2+2 // click to add gradient
 				&& y<ypos+text_height
 				&& taste==1){
 			elements.at(elem_id).verlauf = ! elements.at(elem_id).verlauf;
