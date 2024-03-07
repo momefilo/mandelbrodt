@@ -24,7 +24,11 @@ _Colorinterface::_Colorinterface(int x, int y, _Apple &myApple, std::function<vo
 }
 _Colorinterface::~_Colorinterface(){}
 
-int _Colorinterface::getColor(int id){return elements.at(id).color;}
+int _Colorinterface::getColor(int itter){
+	for(int i=0; i<elements.size(); i++){
+		if(elements.at(i).id == itter) {return elements.at(i).color;}}
+	return -1;
+}
 
 void _Colorinterface::showSatz(int id){
 	//display leeren
@@ -272,3 +276,4 @@ void _Colorinterface::makeVerlauf(){
 	}
 	showSatz(satzakt);
 }
+

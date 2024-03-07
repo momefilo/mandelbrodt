@@ -11,24 +11,102 @@ _Userinterface *Ui;
 _Apple *Apple;
 _Colorinterface *Ci;
 
+struct _AppleData{
+	int xpos;
+	int ypos;
+	int width;
+	int height;
+	int xres{1920};
+	int yres{1080};
+	long double rmin{-1};
+	long double rmax{2};
+	long double imin{-1};
+	long double imax{1};
+	int depth{100};
+};
+std::vector<struct _AppleData> myApples;
+int aktApple = 0;
+
+void newApple(){
+		myApples.push_back(*new _AppleData);
+		myApples.at(aktApple).xres = Apple->xres;
+		myApples.at(aktApple).yres = Apple->yres;
+		myApples.at(aktApple).depth = Apple->depth;
+		myApples.at(aktApple).rmin = Apple->rmin;
+		myApples.at(aktApple).rmax = Apple->rmax;
+		myApples.at(aktApple).imin = Apple->imin;
+		myApples.at(aktApple).imax = Apple->imax;
+		myApples.at(aktApple).xpos = Apple->xpos;
+		myApples.at(aktApple).ypos = Apple->ypos;
+		myApples.at(aktApple).width = Apple->width;
+		myApples.at(aktApple).height = Apple->height;
+		aktApple++;
+}
+
 void ui_callback(int i){
-	if(i<1){ 
-		Apple->xres = Apple->ui->getWert(0);
-		Apple->yres = Apple->ui->getWert(1);
-		Apple->rmin = Apple->ui->getWert(2);
-		Apple->rmax = Apple->ui->getWert(3);
-		Apple->imin = Apple->ui->getWert(4);
-		Apple->imax = Apple->ui->getWert(5);
-		Apple->depth = Apple->ui->getWert(6);
+	if(i<1){
+		myApples.at(aktApple-1).xres = Apple->ui->getWert(0);
+		myApples.at(aktApple-1).yres = Apple->ui->getWert(1);
+		myApples.at(aktApple-1).rmin = Apple->ui->getWert(2);
+		myApples.at(aktApple-1).rmax = Apple->ui->getWert(3);
+		myApples.at(aktApple-1).imin = Apple->ui->getWert(4);
+		myApples.at(aktApple-1).imax = Apple->ui->getWert(5);
+		myApples.at(aktApple-1).depth = Apple->ui->getWert(6);
+		Apple->rmin = myApples.at(aktApple-1).rmin;
+		Apple->rmax = myApples.at(aktApple-1).rmax;
+		Apple->imin = myApples.at(aktApple-1).imin;
+		Apple->imax = myApples.at(aktApple-1).imax;
+		Apple->depth = myApples.at(aktApple-1).depth;
 		Apple->clearScreen();
 		Apple->init();
+		myApples.at(aktApple-1).xpos = Apple->xpos;
+		myApples.at(aktApple-1).ypos = Apple->ypos;
+		myApples.at(aktApple-1).width = Apple->width;
+		myApples.at(aktApple-1).height = Apple->height;
 		Apple->calc();
 		Apple->paint();
+		Apple->sort();
+		Ci->addElements();
+		Ci->showSatz(0);
 	}
 	else if(i<2){
 		Apple->sort();
 		Ci->addElements();
 		Ci->showSatz(0);
+	}
+	else if(i==3){
+		if(aktApple>1){
+			aktApple--;
+			myApples.pop_back();
+			Apple->clearScreen();
+			Apple->ui->setWert(0, myApples.at(aktApple-1).xres);
+			Apple->ui->setWert(1, myApples.at(aktApple-1).yres);
+			Apple->ui->setWert(2, myApples.at(aktApple-1).rmin);
+			Apple->ui->setWert(3, myApples.at(aktApple-1).rmax);
+			Apple->ui->setWert(4, myApples.at(aktApple-1).imin);
+			Apple->ui->setWert(5, myApples.at(aktApple-1).imax);
+			Apple->ui->setWert(6, myApples.at(aktApple-1).depth);
+			Apple->xres = myApples.at(aktApple-1).xres;
+			Apple->yres = myApples.at(aktApple-1).yres;
+			Apple->xpos = myApples.at(aktApple-1).xpos;
+			Apple->ypos = myApples.at(aktApple-1).ypos;
+			Apple->width = myApples.at(aktApple-1).width;
+			Apple->height = myApples.at(aktApple-1).height;
+			Apple->rmin = myApples.at(aktApple-1).rmin;
+			Apple->rmax = myApples.at(aktApple-1).rmax;
+			Apple->imin = myApples.at(aktApple-1).imin;
+			Apple->imax = myApples.at(aktApple-1).imax;
+			Apple->depth = myApples.at(aktApple-1).depth;
+			Apple->init();
+			Apple->calc();
+			Apple->paint();
+			Apple->sort();
+			Ci->addElements();
+			Ci->showSatz(0);
+		}
+	}
+	else if(i == 9){
+		newApple();
 	}
 };
 void ci_callback(int i){}
@@ -101,6 +179,7 @@ int main(){
 	Apple->calc();
 	Apple->paint();
 	Apple->sort();
+	newApple();
 	Ci = new _Colorinterface(BORDER, Apple->ui->display->yres - Reglerheight, *Apple, ci_callback);
 	Ci->addElements();
 	Ci->showSatz(0);

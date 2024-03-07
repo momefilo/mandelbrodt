@@ -1,8 +1,7 @@
 #ifndef _Userinterface_h
 #define _Userinterface_h 1
 #include "_Display.h"
-#include <string>
-#include <vector>
+
 #define Reglerheight 150
 struct _Element{
 	int x;
@@ -26,6 +25,7 @@ public:
 	int height;
 	_Userinterface(int x, int y, _Display &_display, std::function<void(int)> _callback);
 	~_Userinterface();
+	std::function<void(int)> callback;
 	void writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update);
 	void textComplex(double r, double i);
 	void textFertig(bool fertig);

@@ -2,7 +2,7 @@
 #include "graphics/font16x16.h"
 #include "_Userinterface.h"
 
-std::function<void(int)> callback;
+
 
 _Userinterface::_Userinterface(int x, int y, _Display &_display, std::function<void(int)> _callback){
 	callback = _callback;

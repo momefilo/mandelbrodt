@@ -183,13 +183,14 @@ _Apple::_Apple(_Userinterface &_ui){
 	ui = &_ui;	
 }
 _Apple::~_Apple(){
+	/*
 	free(thr_matrix);
 	free(thr_colors);
 	free(iterMembers);
 	free(oneMembers);
 	free(tenMembers);
 	free(matrix);
-	free(colormatrix);
+	free(colormatrix);*/
 }
 
 void _Apple::clearScreen(){
@@ -275,6 +276,7 @@ void _Apple::onMouseOver(int x, int y, int taste){
 		ui->updateWerte();
 		calc();
 		paint();
+		ui->callback(9);
 	}
 	else if(taste == 0){// clear Start- Endpoint
 		Startpoint[0]=0;
