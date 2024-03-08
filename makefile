@@ -1,12 +1,13 @@
 mandelbrodt: mandel.o _Display.o _Userinterface.o _Apple.o _Colorinterface.o
 	g++ -o mandelbrodt mandel.o _Display.o _Userinterface.o _Apple.o _Colorinterface.o
 	make clean
-
+#-fsanitize=leak -fsanitize=address -fsanitize=undefined
 mandel.o: mandel.cpp
-	g++ -lpthread -c mandel.cpp
+	g++ -c mandel.cpp
 
+#
 _Display.o: include/_Display.cpp
-	g++ -c include/_Display.cpp
+	g++ -lpthread -c include/_Display.cpp
 	
 _Userinterface.o: include/_Userinterface.cpp
 	g++ -c include/_Userinterface.cpp

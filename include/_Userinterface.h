@@ -4,8 +4,8 @@
 
 #define Reglerheight 150
 struct _Element{
-	int x;
-	int y;
+	int x{};
+	int y{};
 	long double wert{0.0L};
 };
 
@@ -18,12 +18,13 @@ private:
 	int elem_height{66};
 	int elem_count{7};
 public:
-	_Display *display;
+	Display *display;
 	int xpos;
 	int ypos;
 	int width;
 	int height;
-	_Userinterface(int x, int y, _Display &_display, std::function<void(int)> _callback);
+	//_Userinterface(int x, int y, std::function<void(int)> _callback);
+	_Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback);
 	~_Userinterface();
 	std::function<void(int)> callback;
 	void writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update);

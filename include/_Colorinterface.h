@@ -5,16 +5,16 @@
 struct _Farbverlauf{
 	int startcolor{0x00000000};
 	int endtcolor{0x00000000};
-	int startiter;
-	int enditer;
+	int startiter{};
+	int enditer{};
 };
 
 struct _CiElement{
-	int x;
-	int y;
+	int x{};
+	int y{};
 	int color{0x00000000};
 	int members{1};
-	int id;
+	int id{};
 	bool verlauf{false};
 };
 

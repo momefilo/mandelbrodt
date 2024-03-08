@@ -4,18 +4,18 @@
 #include "include/_Colorinterface.h"
 #include "include/_Display.h"
 
-#define BORDER 2
+constexpr unsigned int BORDER = 2;
 
-_Display *Display;
+Display *myDisplay;
 _Userinterface *Ui;
 _Apple *Apple;
 _Colorinterface *Ci;
 
-struct _AppleData{
-	int xpos;
-	int ypos;
-	int width;
-	int height;
+struct AppleData{
+	int xpos{};
+	int ypos{};
+	int width{};
+	int height{};
 	int xres{1920};
 	int yres{1080};
 	long double rmin{-1};
@@ -24,79 +24,77 @@ struct _AppleData{
 	long double imax{1};
 	int depth{100};
 };
-std::vector<struct _AppleData> myApples;
-int aktApple = 0;
+std::vector<struct AppleData> myAppleDatas;
 
 void newApple(){
-		myApples.push_back(*new _AppleData);
-		myApples.at(aktApple).xres = Apple->xres;
-		myApples.at(aktApple).yres = Apple->yres;
-		myApples.at(aktApple).depth = Apple->depth;
-		myApples.at(aktApple).rmin = Apple->rmin;
-		myApples.at(aktApple).rmax = Apple->rmax;
-		myApples.at(aktApple).imin = Apple->imin;
-		myApples.at(aktApple).imax = Apple->imax;
-		myApples.at(aktApple).xpos = Apple->xpos;
-		myApples.at(aktApple).ypos = Apple->ypos;
-		myApples.at(aktApple).width = Apple->width;
-		myApples.at(aktApple).height = Apple->height;
-		aktApple++;
+	myAppleDatas.push_back(AppleData());
+	myAppleDatas.back().xres = Apple->xres;
+	myAppleDatas.back().yres = Apple->yres;
+	myAppleDatas.back().depth = Apple->depth;
+	myAppleDatas.back().rmin = Apple->rmin;
+	myAppleDatas.back().rmax = Apple->rmax;
+	myAppleDatas.back().imin = Apple->imin;
+	myAppleDatas.back().imax = Apple->imax;
+	myAppleDatas.back().xpos = Apple->xpos;
+	myAppleDatas.back().ypos = Apple->ypos;
+	myAppleDatas.back().width = Apple->width;
+	myAppleDatas.back().height = Apple->height;
 }
 
 void ui_callback(int i){
-	if(i<1){
-		myApples.at(aktApple-1).xres = Apple->ui->getWert(0);
-		myApples.at(aktApple-1).yres = Apple->ui->getWert(1);
-		myApples.at(aktApple-1).rmin = Apple->ui->getWert(2);
-		myApples.at(aktApple-1).rmax = Apple->ui->getWert(3);
-		myApples.at(aktApple-1).imin = Apple->ui->getWert(4);
-		myApples.at(aktApple-1).imax = Apple->ui->getWert(5);
-		myApples.at(aktApple-1).depth = Apple->ui->getWert(6);
-		Apple->rmin = myApples.at(aktApple-1).rmin;
-		Apple->rmax = myApples.at(aktApple-1).rmax;
-		Apple->imin = myApples.at(aktApple-1).imin;
-		Apple->imax = myApples.at(aktApple-1).imax;
-		Apple->depth = myApples.at(aktApple-1).depth;
+	if(i<1){//recalc Apple
+		myAppleDatas.back().xres = Apple->ui->getWert(0);
+		myAppleDatas.back().yres = Apple->ui->getWert(1);
+		myAppleDatas.back().rmin = Apple->ui->getWert(2);
+		myAppleDatas.back().rmax = Apple->ui->getWert(3);
+		myAppleDatas.back().imin = Apple->ui->getWert(4);
+		myAppleDatas.back().imax = Apple->ui->getWert(5);
+		myAppleDatas.back().depth = Apple->ui->getWert(6);
+		Apple->rmin = myAppleDatas.back().rmin;
+		Apple->rmax = myAppleDatas.back().rmax;
+		Apple->imin = myAppleDatas.back().imin;
+		Apple->imax = myAppleDatas.back().imax;
+		Apple->depth = myAppleDatas.back().depth;
 		Apple->clearScreen();
 		Apple->init();
-		myApples.at(aktApple-1).xpos = Apple->xpos;
-		myApples.at(aktApple-1).ypos = Apple->ypos;
-		myApples.at(aktApple-1).width = Apple->width;
-		myApples.at(aktApple-1).height = Apple->height;
+		myAppleDatas.back().xpos = Apple->xpos;
+		myAppleDatas.back().ypos = Apple->ypos;
+		myAppleDatas.back().width = Apple->width;
+		myAppleDatas.back().height = Apple->height;
 		Apple->calc();
 		Apple->paint();
 		Apple->sort();
 		Ci->addElements();
 		Ci->showSatz(0);
 	}
-	else if(i<2){
+	else if(i<2){//re-sort the Apple
 		Apple->sort();
 		Ci->addElements();
 		Ci->showSatz(0);
 	}
-	else if(i==3){
-		if(aktApple>1){
-			aktApple--;
-			myApples.pop_back();
+	else if(i==3){//bach to previus Apple
+		std::cout<<"myAppleDatas.size()"<<myAppleDatas.size();
+		if(myAppleDatas.size()>1){
+			myAppleDatas.pop_back();
 			Apple->clearScreen();
-			Apple->ui->setWert(0, myApples.at(aktApple-1).xres);
-			Apple->ui->setWert(1, myApples.at(aktApple-1).yres);
-			Apple->ui->setWert(2, myApples.at(aktApple-1).rmin);
-			Apple->ui->setWert(3, myApples.at(aktApple-1).rmax);
-			Apple->ui->setWert(4, myApples.at(aktApple-1).imin);
-			Apple->ui->setWert(5, myApples.at(aktApple-1).imax);
-			Apple->ui->setWert(6, myApples.at(aktApple-1).depth);
-			Apple->xres = myApples.at(aktApple-1).xres;
-			Apple->yres = myApples.at(aktApple-1).yres;
-			Apple->xpos = myApples.at(aktApple-1).xpos;
-			Apple->ypos = myApples.at(aktApple-1).ypos;
-			Apple->width = myApples.at(aktApple-1).width;
-			Apple->height = myApples.at(aktApple-1).height;
-			Apple->rmin = myApples.at(aktApple-1).rmin;
-			Apple->rmax = myApples.at(aktApple-1).rmax;
-			Apple->imin = myApples.at(aktApple-1).imin;
-			Apple->imax = myApples.at(aktApple-1).imax;
-			Apple->depth = myApples.at(aktApple-1).depth;
+			Apple->ui->setWert(0, myAppleDatas.back().xres);
+			Apple->ui->setWert(1, myAppleDatas.back().yres);
+			Apple->ui->setWert(2, myAppleDatas.back().rmin);
+			Apple->ui->setWert(3, myAppleDatas.back().rmax);
+			Apple->ui->setWert(4, myAppleDatas.back().imin);
+			Apple->ui->setWert(5, myAppleDatas.back().imax);
+			Apple->ui->setWert(6, myAppleDatas.back().depth);
+			Apple->xres = myAppleDatas.back().xres;
+			Apple->yres = myAppleDatas.back().yres;
+			Apple->xpos = myAppleDatas.back().xpos;
+			Apple->ypos = myAppleDatas.back().ypos;
+			Apple->width = myAppleDatas.back().width;
+			Apple->height = myAppleDatas.back().height;
+			Apple->rmin = myAppleDatas.back().rmin;
+			Apple->rmax = myAppleDatas.back().rmax;
+			Apple->imin = myAppleDatas.back().imin;
+			Apple->imax = myAppleDatas.back().imax;
+			Apple->depth = myAppleDatas.back().depth;
 			Apple->init();
 			Apple->calc();
 			Apple->paint();
@@ -105,7 +103,7 @@ void ui_callback(int i){
 			Ci->showSatz(0);
 		}
 	}
-	else if(i == 9){
+	else if(i == 9){// new Apple
 		newApple();
 	}
 };
@@ -165,17 +163,18 @@ void loop(){
 }
 
 int main(){
-	Display = new _Display();
-	Ui = new _Userinterface(BORDER, BORDER, *Display,  ui_callback);
-	Ui->setWert(0, Display->xres);
-	Ui->setWert(1, Display->yres);
+	myDisplay = new Display();
+	//Ui = new _Userinterface(BORDER, BORDER,  ui_callback);
+	Ui = new _Userinterface(BORDER, BORDER, *myDisplay,  ui_callback);
+	Ui->setWert(0, myDisplay->xres);
+	Ui->setWert(1, myDisplay->yres);
 	Ui->setWert(2, -1);
 	Ui->setWert(3, 2);
 	Ui->setWert(4, -1);
 	Ui->setWert(5, 1);
 	Ui->setWert(6, 100);
 	Apple = new _Apple(*Ui);
-	Apple->init(Display->xres, Display->yres, -1, 2, -1, 1);
+	Apple->init(myDisplay->xres, myDisplay->yres, -1, 2, -1, 1);
 	Apple->calc();
 	Apple->paint();
 	Apple->sort();
@@ -186,7 +185,7 @@ int main(){
 	
 	loop();
 	//Programmende
-	delete Display;
+	delete myDisplay;
 	delete Ui;
 	return 0;
 }

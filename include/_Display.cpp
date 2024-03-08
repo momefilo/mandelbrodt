@@ -1,6 +1,6 @@
 #include "_Display.h"
 
-_Display::_Display(){
+Display::Display(){
 	struct fb_var_screeninfo Vinfo;
 	struct fb_fix_screeninfo Finfo;
 	fbfile = open("/dev/fb0", O_RDWR);
@@ -26,14 +26,14 @@ _Display::_Display(){
 	}
 }
 
-_Display::~_Display(){
+Display::~Display(){
 	munmap(fbpointer, bufferlenght);
 	close(fbfile);
 	free(fbpointer);
 	free(fbspiegel);
 }
 
-void _Display::putDisplay(int x, int y, int color){
+void Display::putDisplay(int x, int y, int color){
 		if(bpp == 16){
 		uint16_t farbe = ((((0x00FF0000&color)>>16)/8)<<11) \
 						+ ((((0x0000FF00&color)>>8)/4)<<5) \
@@ -45,7 +45,7 @@ void _Display::putDisplay(int x, int y, int color){
 	}
 }
 
-void _Display::putSpiegel(int x, int y, int color){
+void Display::putSpiegel(int x, int y, int color){
 		if(bpp == 16){
 		uint16_t farbe = ((((0x00FF0000&color)>>16)/8)<<11) \
 						+ ((((0x0000FF00&color)>>8)/4)<<5) \
@@ -57,7 +57,7 @@ void _Display::putSpiegel(int x, int y, int color){
 	}
 }
 
-void _Display::drawSpiegel(int offset, int lenght){
+void Display::drawSpiegel(int offset, int lenght){
 	memcpy(fbpointer+offset, fbspiegel, lenght);
 	msync(fbpointer+offset, lenght, MS_SYNC);
 }

@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-class _Display{
+class Display{
 	
 private:
 	uint8_t *fbpointer;
@@ -28,8 +28,8 @@ public:
 	int linelenght;
 	int bufferlenght;
 	int bpp;
-	_Display();
-	~_Display();
+	Display();
+	~Display();
 	void putSpiegel(int x, int y, int color);
 	void putDisplay(int x, int y, int color);
 	void drawSpiegel(int offset, int lenght);

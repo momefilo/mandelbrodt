@@ -4,7 +4,8 @@
 
 
 
-_Userinterface::_Userinterface(int x, int y, _Display &_display, std::function<void(int)> _callback){
+//_Userinterface::_Userinterface(int x, int y, std::function<void(int)> _callback){
+_Userinterface::_Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback){
 	callback = _callback;
 	xpos = x;
 	ypos = y;
@@ -231,13 +232,14 @@ void _Userinterface::onMouseOver(int x, int y, int taste){
 		if(elem_id > 1 && elem_id <6 && sum > 1) sum = 1;
 		if(minus > 0) sum = sum * -1;
 		elements.at(elem_id).wert = elements.at(elem_id).wert +sum;
-		int maxwidth = 10*display->xres-2*elem_width;
-		int maxheight = 10*display->yres-Reglerheight;
+		int maxwidth = 10*(display->xres-2*elem_width);
+		int maxheight = 10*(display->yres-Reglerheight);
 		if(elements.at(0).wert < 10) elements.at(0).wert = 10;
 		if(elements.at(1).wert < 10) elements.at(1).wert = 10;
 		if(elements.at(0).wert > maxwidth) elements.at(0).wert = maxwidth;
 		if(elements.at(1).wert > maxheight) elements.at(1).wert = maxheight;
 		if(elements.at(6).wert <1 ) elements.at(6).wert = 1;
+		if(elements.at(6).wert >999999 ) elements.at(6).wert = 999999; //Breichsüberschreitung
 		updateWert(elem_id);
 	}
 }

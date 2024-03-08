@@ -37,7 +37,7 @@ static void *thrFunc(void* val){
 	return NULL;
 }
 
-void _Apple::calc(){// start <=10 Threads to fill AppleColors and AppleMatrix
+void _Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
 	thr_matrix = NULL;
 	thr_colors = NULL;

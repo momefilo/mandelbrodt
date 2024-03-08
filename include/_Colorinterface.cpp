@@ -87,7 +87,7 @@ void _Colorinterface::drawElem(int apos, int dpos){
 	char text[9];//iter
 	sprintf(text,"% 8d",elements.at(apos).id);
 	int fg = 0x00000000;
-	if(elements.at(apos).verlauf)fg = 0x00FFFFFF;// TODO
+	if(elements.at(apos).verlauf)fg = 0x00FFFFFF;
 	int bg = 0x00808080;
 	Apple->ui->writeText(elements.at(apos).x+1, elements.at(apos).y+2, text, 8, fg, bg, 8,true);
 	
@@ -242,10 +242,10 @@ void _Colorinterface::makeVerlauf(){
 			gradient.push_back(farbe);
 		}
 	}
-	struct _farbe farbe2{elements.at((elements.size()-1)).color, (elements.size()-1)};
+	struct _farbe farbe2{elements.at((elements.size()-1)).color, (int)(elements.size()-1)};
 	gradient.push_back(farbe2);
 	
-	for(int i=0; i<gradient.size()-1; i++/*i=i+2*/){
+	for(int i=0; i<gradient.size()-1; i++){
 		//iterdiff
 		int farbe1 = gradient.at(i).color;
 		int farbe2 = gradient.at(i+1).color;
