@@ -22,7 +22,7 @@ _Colorinterface::_Colorinterface(int x, int y, _Apple &myApple, std::function<vo
 	fclose(efile);
 	Apple->ui->display->drawSpiegel(0,Apple->ui->display->bufferlenght);
 }
-_Colorinterface::~_Colorinterface(){}
+//_Colorinterface::~_Colorinterface(){}
 
 int _Colorinterface::getColor(int itter){
 	for(int i=0; i<elements.size(); i++){

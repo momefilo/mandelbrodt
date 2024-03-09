@@ -23,7 +23,7 @@ _Userinterface::_Userinterface(int x, int y, Display &_display, std::function<vo
 	drawGraphic();
 	updateWerte();
 }
-_Userinterface::~_Userinterface(){}
+//_Userinterface::~_Userinterface(){}
 
 void _Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int color){
 	

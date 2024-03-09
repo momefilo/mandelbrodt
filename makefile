@@ -1,7 +1,7 @@
 mandelbrodt: mandel.o _Display.o _Userinterface.o _Apple.o _Colorinterface.o
 	g++ -o mandelbrodt mandel.o _Display.o _Userinterface.o _Apple.o _Colorinterface.o
 	make clean
-#-fsanitize=leak -fsanitize=address -fsanitize=undefined
+# -g -fsanitize=leak -fsanitize=address -fsanitize=undefined
 mandel.o: mandel.cpp
 	g++ -c mandel.cpp
 

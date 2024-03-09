@@ -34,7 +34,7 @@ public:
 	int width;
 	int height;
 	_Colorinterface(int x, int y, _Apple &myApple, std::function<void(int)> _callback);
-	~_Colorinterface();
+//	~_Colorinterface();
 	void drawElem(int apos, int dpos);
 	void addElements();
 	void showSatz(int id);

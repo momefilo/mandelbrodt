@@ -163,29 +163,36 @@ void loop(){
 }
 
 int main(){
-	myDisplay = new Display();
-	//Ui = new _Userinterface(BORDER, BORDER,  ui_callback);
-	Ui = new _Userinterface(BORDER, BORDER, *myDisplay,  ui_callback);
-	Ui->setWert(0, myDisplay->xres);
-	Ui->setWert(1, myDisplay->yres);
-	Ui->setWert(2, -1);
-	Ui->setWert(3, 2);
-	Ui->setWert(4, -1);
-	Ui->setWert(5, 1);
-	Ui->setWert(6, 100);
-	Apple = new _Apple(*Ui);
-	Apple->init(myDisplay->xres, myDisplay->yres, -1, 2, -1, 1);
-	Apple->calc();
-	Apple->paint();
-	Apple->sort();
-	newApple();
-	Ci = new _Colorinterface(BORDER, Apple->ui->display->yres - Reglerheight, *Apple, ci_callback);
-	Ci->addElements();
-	Ci->showSatz(0);
-	
-	loop();
-	//Programmende
-	delete myDisplay;
-	delete Ui;
-	return 0;
+	try{
+		myDisplay = new Display();
+		Ui = new _Userinterface(BORDER, BORDER, *myDisplay,  ui_callback);
+		Ui->setWert(0, myDisplay->xres);
+		Ui->setWert(1, myDisplay->yres);
+		Ui->setWert(2, -1);
+		Ui->setWert(3, 2);
+		Ui->setWert(4, -1);
+		Ui->setWert(5, 1);
+		Ui->setWert(6, 100);
+		Apple = new _Apple(*Ui);
+		Apple->init(myDisplay->xres, myDisplay->yres, -1, 2, -1, 1);
+		Apple->calc();
+		Apple->paint();
+		Apple->sort();
+		newApple();
+		Ci = new _Colorinterface(BORDER, Apple->ui->display->yres - Reglerheight, *Apple, ci_callback);
+		Ci->addElements();
+		Ci->showSatz(0);
+
+		loop();
+		//Programmende
+		delete Ci;
+		delete Apple;
+		delete Ui;
+		delete myDisplay;
+		return 0;
+	}
+	catch (const std::exception& e){
+		std::cerr << "ERROR: " << e.what() << std::endl;
+        return 1;
+    }
 }

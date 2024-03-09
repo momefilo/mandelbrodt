@@ -25,7 +25,7 @@ public:
 	int height;
 	//_Userinterface(int x, int y, std::function<void(int)> _callback);
 	_Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback);
-	~_Userinterface();
+//	~_Userinterface();
 	std::function<void(int)> callback;
 	void writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update);
 	void textComplex(double r, double i);
