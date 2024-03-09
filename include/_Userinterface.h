@@ -3,17 +3,17 @@
 #include "_Display.h"
 
 #define Reglerheight 150
-struct _Element{
+struct Element{
 	int x{};
 	int y{};
 	long double wert{0.0L};
 };
 
-class _Userinterface{
+class Userinterface{
 private:
 	void write_font16x16(int x, int y, char zeichen, int fgcolor, int bgcolor);
 	void write_font8x8(int x, int y, char zeichen, int fgcolor, int bgcolor);
-	std::vector<struct _Element> elements;
+	std::vector<Element> elements;
 	int elem_width{132};
 	int elem_height{66};
 	int elem_count{7};
@@ -23,9 +23,7 @@ public:
 	int ypos;
 	int width;
 	int height;
-	//_Userinterface(int x, int y, std::function<void(int)> _callback);
-	_Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback);
-//	~_Userinterface();
+	Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback);
 	std::function<void(int)> callback;
 	void writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update);
 	void textComplex(double r, double i);

@@ -37,12 +37,18 @@ static void *thrFunc(void* val){
 	return NULL;
 }
 
-void _Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
+void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
 	thr_matrix = NULL;
 	thr_colors = NULL;
 	thr_matrix = (int**)malloc(xres * sizeof(int*));
 	thr_colors = (int**)malloc(xres * sizeof(int*));
+	if(thr_matrix==0 || thr_colors==0){
+		throw std::runtime_error{
+			std::string{ "Failed to malloc thr_matrix || thr_colors " }
+			+ std::strerror(errno)
+		};
+	}
 	for(int i=0; i<xres; i++){
 		thr_matrix[i] = (int*)malloc(yres * sizeof(int));
 		thr_colors[i] = (int*)malloc(yres * sizeof(int));
@@ -62,7 +68,12 @@ void _Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 		int aktThr = 0;
 		while(aktThr < maxThr){
 			tmp_x[aktThr] = x;
-			pthread_create( &thrIds[aktThr], NULL, &thrFunc, (void *)tmp_x+aktThr*sizeof(int));
+			if(pthread_create( &thrIds[aktThr], NULL, &thrFunc, (void *)tmp_x+aktThr*sizeof(int))){
+				throw std::runtime_error{
+					std::string{ "Failed to start thread " }
+					+ std::strerror(errno)
+				};
+			}
 			aktThr++;
 			x++;
 		}
@@ -106,7 +117,7 @@ void quicksort(int *number[],int first,int last){
 	quicksort(number,j+1,last);
 	}
 }
-void _Apple::sort(){
+void Apple::sort(){
 	ui->textFertig(false);
 	countsOfIter = 0;
 	iterMembers = NULL;
@@ -179,10 +190,10 @@ void _Apple::sort(){
 	ui->textFertig(true);
 }
 
-_Apple::_Apple(_Userinterface &_ui){
+Apple::Apple(Userinterface &_ui){
 	ui = &_ui;	
 }
-_Apple::~_Apple(){
+Apple::~Apple(){
 	free(thr_matrix);
 	free(thr_colors);
 	free(iterMembers);
@@ -192,12 +203,12 @@ _Apple::~_Apple(){
 	free(colormatrix);
 }
 
-void _Apple::clearScreen(){
+void Apple::clearScreen(){
 	for(int x=xpos; x<xpos+width; x++)
 		for(int y=ypos; y<ypos+height; y++) ui->display->putSpiegel(x, y, 0x00000000);
 	ui->display->drawSpiegel(0, ui->display->bufferlenght);
 }
-void _Apple::paint(){
+void Apple::paint(){
 	long double fak = (long double)xres / (long double)width;
 	for(int x=xpos; x<xpos+width; x++){
 		for(int y=ypos; y<ypos+height; y++){
@@ -208,7 +219,7 @@ void _Apple::paint(){
 	}
 	ui->display->drawSpiegel(0,ui->display->bufferlenght);
 }
-void _Apple::onMouseOver(int x, int y, int taste){
+void Apple::onMouseOver(int x, int y, int taste){
 	double _rmin, _rmax, _imin, _imax;
 	int newstartx, newendx, newstarty, newendy;
 	int color = 0x00FF00FF;
@@ -285,7 +296,7 @@ void _Apple::onMouseOver(int x, int y, int taste){
 	}
 }
 
-void _Apple::init(){
+void Apple::init(){
 	int maxwidth = ui->display->xres - (ui->xpos + ui->width);
 	int maxheight = ui->display->yres - Reglerheight;
 	int xfak = 1;
@@ -313,7 +324,7 @@ void _Apple::init(){
 	for(int i=0; i<xres; i++)
 		colormatrix[i] = (int*)malloc(yres * sizeof(int));
 }
-void _Apple::init(int _xres, int _yres, 
+void Apple::init(int _xres, int _yres, 
 					long double _rmin,
 					long double _rmax,
 					long double _imin,

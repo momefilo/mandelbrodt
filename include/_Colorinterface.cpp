@@ -2,12 +2,12 @@
 
 std::function<void(int)> ci_callback;
 
-_Colorinterface::_Colorinterface(int x, int y, _Apple &myApple, std::function<void(int)> _callback){
-	Apple = &myApple;
+_Colorinterface::_Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback){
+	apple = &myApple;
 	ci_callback = _callback;
 	xpos = x;
 	ypos = y;
-	width = Apple->ui->display->xres - border;
+	width = apple->ui->display->xres - border;
 	satz = (width) / elem_width;
 	FILE *efile = fopen("include/graphics/color_cmd.data","rb");
 	if( !efile){return;}
@@ -16,11 +16,11 @@ _Colorinterface::_Colorinterface(int x, int y, _Apple &myApple, std::function<vo
 			uint8_t farbe[3];
 			fread(farbe, sizeof(uint8_t),3,efile);
 			int color = farbe[0]<<16 | farbe[1]<<8 | farbe[2];
-			Apple->ui->display->putSpiegel(x, y, color);
+			apple->ui->display->putSpiegel(x, y, color);
 		}
 	}
 	fclose(efile);
-	Apple->ui->display->drawSpiegel(0,Apple->ui->display->bufferlenght);
+	apple->ui->display->drawSpiegel(0,apple->ui->display->bufferlenght);
 }
 //_Colorinterface::~_Colorinterface(){}
 
@@ -34,7 +34,7 @@ void _Colorinterface::showSatz(int id){
 	//display leeren
 	for(int x=xpos+border; x<xpos+border + width; x++)
 		for(int y=ypos; y<ypos+elem_height; y++)
-			Apple->ui->display->putSpiegel(x, y, 0x00000000);
+			apple->ui->display->putSpiegel(x, y, 0x00000000);
 	if(id<satzcount){// ein ganzen Satz Elemente zeigen
 		int z = 0;
 		for(int i=id*satz; i<id*satz + satz; i++){
@@ -55,8 +55,8 @@ void _Colorinterface::showSatz(int id){
 	sprintf(text2,"%- 7d",satzcount);
 	int fg = 0x00000000;
 	int bg = 0x00808080;
-	Apple->ui->writeText(xpos, ypos+1, text, 7, fg, bg, 8,true);
-	Apple->ui->writeText(xpos, ypos+11, text2, 7, fg, bg, 8,true);
+	apple->ui->writeText(xpos, ypos+1, text, 7, fg, bg, 8,true);
+	apple->ui->writeText(xpos, ypos+11, text2, 7, fg, bg, 8,true);
 }
 
 void _Colorinterface::drawElem(int apos, int dpos){
@@ -74,14 +74,14 @@ void _Colorinterface::drawElem(int apos, int dpos){
 			int fx = x + (xpos + border + dpos * elem_width);
 			int fy = y + ypos;
 			if(x>2 && x<elem_width-2 && y>text_height/2+2 && y<text_height-1)
-				Apple->ui->display->putSpiegel(fx,fy, elements.at(apos).color);
+				apple->ui->display->putSpiegel(fx,fy, elements.at(apos).color);
 			else if(x>2 && x<(elem_width-4)/3 && y>text_height && y>yred)
-				Apple->ui->display->putSpiegel(fx,fy, 0x00FF0000);
+				apple->ui->display->putSpiegel(fx,fy, 0x00FF0000);
 			else if(x>(elem_width-4)/3-1 && x<(elem_width-4)/3*2 && y>text_height && y>ygrn)
-				Apple->ui->display->putSpiegel(fx,fy, 0x0000FF00);
+				apple->ui->display->putSpiegel(fx,fy, 0x0000FF00);
 			else if(x>(elem_width-4)/3*2-1 && x<elem_width-2 && y>text_height && y>yblu)
-				Apple->ui->display->putSpiegel(fx,fy, 0x000000FF);
-			else Apple->ui->display->putSpiegel(fx,fy, 0x00808080);
+				apple->ui->display->putSpiegel(fx,fy, 0x000000FF);
+			else apple->ui->display->putSpiegel(fx,fy, 0x00808080);
 		}
 	}
 	char text[9];//iter
@@ -89,37 +89,37 @@ void _Colorinterface::drawElem(int apos, int dpos){
 	int fg = 0x00000000;
 	if(elements.at(apos).verlauf)fg = 0x00FFFFFF;
 	int bg = 0x00808080;
-	Apple->ui->writeText(elements.at(apos).x+1, elements.at(apos).y+2, text, 8, fg, bg, 8,true);
+	apple->ui->writeText(elements.at(apos).x+1, elements.at(apos).y+2, text, 8, fg, bg, 8,true);
 	
 	char text2[9];//members
 	int members = 1;
-	for(int i=0; i<Apple->countsOfIter; i++){
-		if(Apple->iterMembers[i][0] == elements.at(apos).id){
-			members = Apple->iterMembers[i][1];
+	for(int i=0; i<apple->countsOfIter; i++){
+		if(apple->iterMembers[i][0] == elements.at(apos).id){
+			members = apple->iterMembers[i][1];
 			break;
 		}
 	}
 	sprintf(text2,"% 8d",members);
-	Apple->ui->writeText(elements.at(apos).x+1, elements.at(apos).y+10, text2, 8, fg, bg, 8,true);
+	apple->ui->writeText(elements.at(apos).x+1, elements.at(apos).y+10, text2, 8, fg, bg, 8,true);
 	
-	Apple->ui->display->drawSpiegel(0, Apple->ui->display->bufferlenght);
+	apple->ui->display->drawSpiegel(0, apple->ui->display->bufferlenght);
 }
 
 void _Colorinterface::addElements(){
 	elements.erase(elements.begin(),elements.end());
 	colorgradients.erase(colorgradients.begin(),colorgradients.end());
-	for(int i=Apple->countsOfIter-1; i>=0; i--){
+	for(int i=apple->countsOfIter-1; i>=0; i--){
 		_CiElement elem;
-		elem.id = Apple->iterMembers[i][0];
-		double div = (255.0/Apple->depth) * elem.id;
+		elem.id = apple->iterMembers[i][0];
+		double div = (255.0/apple->depth) * elem.id;
 		elem.color = (int)div<<16 | (int)div<<8 | (int)div;
 		elements.push_back(elem);
 	}
-	satzcount = Apple->countsOfIter / satz;
+	satzcount = apple->countsOfIter / satz;
 	satzakt = 0;
 	satzrest = 0;
-	if(satzcount == 0) satzrest = Apple->countsOfIter;
-	else satzrest = Apple->countsOfIter - satzcount * satz;
+	if(satzcount == 0) satzrest = apple->countsOfIter;
+	else satzrest = apple->countsOfIter - satzcount * satz;
 }
 
 void _Colorinterface::onMouseOver(int x, int y, int taste){
@@ -184,7 +184,7 @@ void _Colorinterface::onMouseOver(int x, int y, int taste){
 	int color = 0; //0=blue, 1=green, 2=red
 	if(x>border) 
 		elem_id = (x-border)/elem_width + satzakt * satz;
-	if(elem_id > -1 && elem_id < Apple->countsOfIter){
+	if(elem_id > -1 && elem_id < apple->countsOfIter){
 		if( (x) - elements.at(elem_id).x < (elem_width-4)/3) {color = 2;}
 		else if( (x) - elements.at(elem_id).x < (elem_width-4)/3*2) {color = 1;}
 		if(y>ypos 
@@ -214,19 +214,19 @@ void _Colorinterface::onMouseOver(int x, int y, int taste){
 }
 
 void _Colorinterface::drawVerlauf(){
-	Apple->ui->textFertig(false);
-	for(int x=0; x<Apple->xres; x++){
-		for(int y=0; y<Apple->yres; y++){
+	apple->ui->textFertig(false);
+	for(int x=0; x<apple->xres; x++){
+		for(int y=0; y<apple->yres; y++){
 			for(int i=0; i<elements.size()-1; i++){
-				if(Apple->matrix[x][y] == elements.at(i).id){
-					Apple->colormatrix[x][y] = elements.at(i).color;
+				if(apple->matrix[x][y] == elements.at(i).id){
+					apple->colormatrix[x][y] = elements.at(i).color;
 					break;
 				}
 			}
 		}
 	}
-	Apple->paint();
-	Apple->ui->textFertig(true);
+	apple->paint();
+	apple->ui->textFertig(true);
 }
 
 void _Colorinterface::makeVerlauf(){

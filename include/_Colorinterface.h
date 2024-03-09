@@ -28,12 +28,12 @@ private:
 	int border{66};
 	int satz, satzcount, satzakt, satzrest;
 public:
-	_Apple *Apple;
+	Apple *apple;
 	int xpos;
 	int ypos;
 	int width;
 	int height;
-	_Colorinterface(int x, int y, _Apple &myApple, std::function<void(int)> _callback);
+	_Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback);
 //	~_Colorinterface();
 	void drawElem(int apos, int dpos);
 	void addElements();

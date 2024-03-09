@@ -5,13 +5,13 @@
 
 
 //_Userinterface::_Userinterface(int x, int y, std::function<void(int)> _callback){
-_Userinterface::_Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback){
+Userinterface::Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback){
 	callback = _callback;
 	xpos = x;
 	ypos = y;
 	display = &_display;
 	for(int i=0; i<elem_count; i++){
-		_Element element;
+		Element element;
 		element.x = xpos;
 		if(i % 2 != 0) element.x = elem_width + xpos;
 		element.y = (i / 2) * elem_height + ypos;
@@ -23,9 +23,8 @@ _Userinterface::_Userinterface(int x, int y, Display &_display, std::function<vo
 	drawGraphic();
 	updateWerte();
 }
-//_Userinterface::~_Userinterface(){}
 
-void _Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int color){
+void Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int color){
 	
 	if(xend < xstart){
 		int tmp = xstart;
@@ -47,9 +46,14 @@ void _Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int co
 	for(int y=ystart; y<yend; y++)display->putDisplay(xend, y, color);
 }
 
-void _Userinterface::drawGraphic(){
+void Userinterface::drawGraphic(){
 	FILE *efile = fopen("include/graphics/element.data","rb");
-	if( !efile){return;}
+	if( !efile){
+		throw std::runtime_error{
+			std::string{ "Failed to open include/graphics/element.data " }
+			+ std::strerror(errno)
+		};
+	}
 	for(int i=0; i<elem_count; i++){
 		int inRow = 1;
 		fseek(efile,0,SEEK_SET);
@@ -70,7 +74,12 @@ void _Userinterface::drawGraphic(){
 		writeText(elements[h].x, elements[h].y, texte[h], 8, fgfarbe, bgfarbe,16, true);
 		
 	FILE *bfile = fopen("include/graphics/button_1.data","rb");
-	if( !bfile){return;}
+	if( !bfile){
+		throw std::runtime_error{
+			std::string{ "Failed to open include/graphics/button_1.data " }
+			+ std::strerror(errno)
+		};
+	}
 	int startx = elements[elem_count-1].x + elem_width;
 	int starty = elements[elem_count-1].y;
 	for(int x=startx; x<startx+ elem_width; x++){
@@ -85,7 +94,7 @@ void _Userinterface::drawGraphic(){
 	display->drawSpiegel(0,display->bufferlenght);
 }
 // zeichen < 128
-void _Userinterface::write_font8x8(int x, int y, char zeichen, int fgcolor, int bgcolor){
+void Userinterface::write_font8x8(int x, int y, char zeichen, int fgcolor, int bgcolor){
 	int myy = 0;
 	for(int i=0; i<8; i=i+1){ // 8 Byte umfasst ein 8x8Bit Zeichen
 		int myx = 0;
@@ -101,7 +110,7 @@ void _Userinterface::write_font8x8(int x, int y, char zeichen, int fgcolor, int 
 		myy++;
 	}
 }
-void _Userinterface::write_font16x16(int x, int y, char zeichen, int fgcolor, int bgcolor){
+void Userinterface::write_font16x16(int x, int y, char zeichen, int fgcolor, int bgcolor){
 	int myx = 0, myy = 0;
 	for(int i=0; i<32; i=i+1){ // 32 Byte umfasst ein 16x16Bit Zeichen
 		for(int k=0; k<8; k=k+1){ // Acht Bits pro Byte
@@ -119,7 +128,7 @@ void _Userinterface::write_font16x16(int x, int y, char zeichen, int fgcolor, in
 		}
 	}
 }
-void _Userinterface::writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update){
+void Userinterface::writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update){
 	if(size == 8)
 		for(int i=0; i<len; i++) write_font8x8(x+i*8, y, text[i], fgcolor, bgcolor);
 	else if(size == 16)
@@ -128,7 +137,7 @@ void _Userinterface::writeText(int x, int y, char *text, int len, int fgcolor, i
 	if(update)
 		display->drawSpiegel(0,display->bufferlenght);
 }
-void _Userinterface::textComplex(double r, double i){
+void Userinterface::textComplex(double r, double i){// sprintf
 	char text[2][30];
 	int fgcolor = 0x00FFFFFF;
 	int bgcolor = 0x00000000;
@@ -137,7 +146,7 @@ void _Userinterface::textComplex(double r, double i){
 	writeText(2, height, text[0], 30, fgcolor, bgcolor,8,false);
 	writeText(2, height + 8, text[1], 30, fgcolor, bgcolor,8,false);
 }
-void _Userinterface::textFertig(bool fertig){
+void Userinterface::textFertig(bool fertig){// sprintf
 	char text[] = "Rechne";
 	int fgcolor = 0x00FF0000;
 	if(fertig){
@@ -148,7 +157,7 @@ void _Userinterface::textFertig(bool fertig){
 	writeText(2, height + 20, text, 6, fgcolor, bgcolor, 16, true);
 }
 
-void _Userinterface::updateWert(int element){
+void Userinterface::updateWert(int element){// sprintf
 	char text[8];
 	if(element < 2 || element > 5) sprintf(text, "% 8d", (int)elements.at(element).wert);
 	else sprintf(text, "%.5f", (float)elements.at(element).wert);
@@ -156,16 +165,16 @@ void _Userinterface::updateWert(int element){
 	int bgcolor = 96<<16 | 96<<8 | 96;
 	writeText(elements.at(element).x+2, elements.at(element).y+35, text, 8, fgcolor, bgcolor, 16,true);
 }
-void _Userinterface::updateWerte(){
+void Userinterface::updateWerte(){
 	for(int i=0; i<elem_count; i++) updateWert(i);
 }
-void _Userinterface::setWert(int id, long double wert){
+void Userinterface::setWert(int id, long double wert){
 	elements.at(id).wert = wert;
 	updateWert(id);
 }
-long double _Userinterface::getWert(int id){ return elements.at(id).wert; }
+long double Userinterface::getWert(int id){return elements.at(id).wert;}
 
-void _Userinterface::onMouseOver(int x, int y, int taste){
+void Userinterface::onMouseOver(int x, int y, int taste){
 	
 	//get element-id (0 bis ElemCount-1. Buttons = -2)
 	int elem_id = -1;

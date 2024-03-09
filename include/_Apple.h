@@ -1,12 +1,12 @@
 #ifndef _Apple_h
 #define _Apple_h 1
 #include "_Userinterface.h"
-class _Apple{
+class Apple{
 private:
 	int Startpoint[2]{0,0};
 	int Endpoint[2]{0,0};
 public:
-	_Userinterface *ui;
+	Userinterface *ui;
 	int xpos;
 	int ypos;
 	int width;
@@ -21,8 +21,8 @@ public:
 	int **matrix;
 	int **colormatrix;
 	int **iterMembers, *oneMembers, *tenMembers, countsOfIter;
-	_Apple(_Userinterface &_ui);
-	~_Apple();
+	Apple(Userinterface &_ui);
+	~Apple();
 	void paint();
 	void calc();
 	void sort();
