@@ -11,34 +11,10 @@ Userinterface *Ui;
 Apple *myApple;
 _Colorinterface *Ci;
 
-struct AppleData{
-	int xpos{};
-	int ypos{};
-	int width{};
-	int height{};
-	int xres{1920};
-	int yres{1080};
-	long double rmin{-1};
-	long double rmax{2};
-	long double imin{-1};
-	long double imax{1};
-	int depth{100};
-};
-std::vector<struct AppleData> myAppleDatas;
+std::vector<struct ApplePara> myAppleDatas;
 
 void newApple(){
-	myAppleDatas.push_back(AppleData());
-	myAppleDatas.back().xres = myApple->xres;
-	myAppleDatas.back().yres = myApple->yres;
-	myAppleDatas.back().depth = myApple->depth;
-	myAppleDatas.back().rmin = myApple->rmin;
-	myAppleDatas.back().rmax = myApple->rmax;
-	myAppleDatas.back().imin = myApple->imin;
-	myAppleDatas.back().imax = myApple->imax;
-	myAppleDatas.back().xpos = myApple->xpos;
-	myAppleDatas.back().ypos = myApple->ypos;
-	myAppleDatas.back().width = myApple->width;
-	myAppleDatas.back().height = myApple->height;
+	myAppleDatas.push_back(myApple->getPara());
 }
 
 void ui_callback(int i){
@@ -50,17 +26,12 @@ void ui_callback(int i){
 		myAppleDatas.back().imin = myApple->ui->getWert(4);
 		myAppleDatas.back().imax = myApple->ui->getWert(5);
 		myAppleDatas.back().depth = myApple->ui->getWert(6);
-		myApple->rmin = myAppleDatas.back().rmin;
-		myApple->rmax = myAppleDatas.back().rmax;
-		myApple->imin = myAppleDatas.back().imin;
-		myApple->imax = myAppleDatas.back().imax;
-		myApple->depth = myAppleDatas.back().depth;
+		
+		myApple->setPara(myAppleDatas.back());
 		myApple->clearScreen();
 		myApple->init();
-		myAppleDatas.back().xpos = myApple->xpos;
-		myAppleDatas.back().ypos = myApple->ypos;
-		myAppleDatas.back().width = myApple->width;
-		myAppleDatas.back().height = myApple->height;
+		myAppleDatas.back() = myApple->getPara();
+		
 		myApple->calc();
 		myApple->paint();
 		myApple->sort();
@@ -72,28 +43,12 @@ void ui_callback(int i){
 		Ci->addElements();
 		Ci->showSatz(0);
 	}
-	else if(i==3){//bach to previus Apple
+	else if(i==3){//back to previus Apple
 		if(myAppleDatas.size()>1){
 			myAppleDatas.pop_back();
-			myApple->clearScreen();
-			myApple->ui->setWert(0, myAppleDatas.back().xres);
-			myApple->ui->setWert(1, myAppleDatas.back().yres);
-			myApple->ui->setWert(2, myAppleDatas.back().rmin);
-			myApple->ui->setWert(3, myAppleDatas.back().rmax);
-			myApple->ui->setWert(4, myAppleDatas.back().imin);
-			myApple->ui->setWert(5, myAppleDatas.back().imax);
-			myApple->ui->setWert(6, myAppleDatas.back().depth);
-			myApple->xres = myAppleDatas.back().xres;
-			myApple->yres = myAppleDatas.back().yres;
-			myApple->xpos = myAppleDatas.back().xpos;
-			myApple->ypos = myAppleDatas.back().ypos;
-			myApple->width = myAppleDatas.back().width;
-			myApple->height = myAppleDatas.back().height;
-			myApple->rmin = myAppleDatas.back().rmin;
-			myApple->rmax = myAppleDatas.back().rmax;
-			myApple->imin = myAppleDatas.back().imin;
-			myApple->imax = myAppleDatas.back().imax;
-			myApple->depth = myAppleDatas.back().depth;
+			myApple->clearScreen();			
+			myApple->ui->setParas(myAppleDatas.back());
+			myApple->setPara(myAppleDatas.back());
 			myApple->init();
 			myApple->calc();
 			myApple->paint();
@@ -146,7 +101,7 @@ void loop(){
 		}
 		
 		//Apple
-		if(maus_x >= myApple->xpos && (myApple->ui->display->yres-maus_y) <= myApple->height){
+		if(maus_x >= myApple->paras.xpos && (myApple->ui->display->yres-maus_y) <= myApple->paras.height){
 			myApple->onMouseOver(maus_x, (myApple->ui->display->yres-maus_y), taste);
 		}
 		//Ui_element
@@ -187,7 +142,7 @@ int main(){
 		delete Ci;
 		delete myApple;
 		delete Ui;
-		delete myDisplay;
+//		delete myDisplay;
 		return 0;
 	}
 	catch (const std::exception& e){

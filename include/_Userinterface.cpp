@@ -2,9 +2,6 @@
 #include "graphics/font16x16.h"
 #include "_Userinterface.h"
 
-
-
-//_Userinterface::_Userinterface(int x, int y, std::function<void(int)> _callback){
 Userinterface::Userinterface(int x, int y, Display &_display, std::function<void(int)> _callback){
 	callback = _callback;
 	xpos = x;
@@ -22,6 +19,16 @@ Userinterface::Userinterface(int x, int y, Display &_display, std::function<void
 	height = 4*elem_height;
 	drawGraphic();
 	updateWerte();
+}
+
+void Userinterface::setParas(ApplePara para){
+	setWert(0, para.xres);
+	setWert(1, para.yres);
+	setWert(2, para.rmin);
+	setWert(3, para.rmax);
+	setWert(4, para.imin);
+	setWert(5, para.imax);
+	setWert(6, para.depth);
 }
 
 void Userinterface::drawRect(int xstart, int ystart, int xend, int yend, int color){
@@ -147,14 +154,17 @@ void Userinterface::textComplex(double r, double i){// sprintf
 	writeText(2, height + 8, text[1], 30, fgcolor, bgcolor,8,false);
 }
 void Userinterface::textFertig(bool fertig){// sprintf
-	char text[] = "Rechne";
+	char textR[7] = "Rechne";
+	char textF[7] = "Fertig";
 	int fgcolor = 0x00FF0000;
-	if(fertig){
-		sprintf(text, "Fertig");
-		fgcolor = 0x0000FF00;
-	}
 	int bgcolor = 0x00000000;
-	writeText(2, height + 20, text, 6, fgcolor, bgcolor, 16, true);
+	if(fertig){
+		fgcolor = 0x0000FF00;
+		writeText(2, height + 20, textF, 6, fgcolor, bgcolor, 16, true);
+		//sprintf(text, "Fertig");
+	}
+	else{writeText(2, height + 20, textR, 6, fgcolor, bgcolor, 16, true);}
+//	writeText(2, height + 20, text, 6, fgcolor, bgcolor, 16, true);
 }
 
 void Userinterface::updateWert(int element){// sprintf

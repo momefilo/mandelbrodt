@@ -41,28 +41,28 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
 	thr_matrix = NULL;
 	thr_colors = NULL;
-	thr_matrix = (int**)malloc(xres * sizeof(int*));
-	thr_colors = (int**)malloc(xres * sizeof(int*));
+	thr_matrix = (int**)malloc(this->paras.xres * sizeof(int*));
+	thr_colors = (int**)malloc(this->paras.xres * sizeof(int*));
 	if(thr_matrix==0 || thr_colors==0){
 		throw std::runtime_error{
 			std::string{ "Failed to malloc thr_matrix || thr_colors " }
 			+ std::strerror(errno)
 		};
 	}
-	for(int i=0; i<xres; i++){
-		thr_matrix[i] = (int*)malloc(yres * sizeof(int));
-		thr_colors[i] = (int*)malloc(yres * sizeof(int));
+	for(int i=0; i<paras.xres; i++){
+		thr_matrix[i] = (int*)malloc(paras.yres * sizeof(int));
+		thr_colors[i] = (int*)malloc(paras.yres * sizeof(int));
 	}
-	thr_yres = yres;
-	thr_depth = depth;
-	delta_r = (rmax - rmin) / xres;
-	delta_i = (imax - imin) / yres;
-	thr_imin = imin;
-	thr_rmin = rmin;
+	thr_yres = paras.yres;
+	thr_depth = paras.depth;
+	delta_r = (paras.rmax - paras.rmin) / paras.xres;
+	delta_i = (paras.imax - paras.imin) / paras.yres;
+	thr_imin = paras.imin;
+	thr_rmin = paras.rmin;
 	int x = 0;
 	int maxThr = 13;
-	while((xres % maxThr) != 0) maxThr--;
-	while(x < xres){
+	while((paras.xres % maxThr) != 0) maxThr--;
+	while(x < paras.xres){
 		pthread_t thrIds[maxThr];
 		int tmp_x[maxThr];
 		int aktThr = 0;
@@ -81,10 +81,10 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 			pthread_join(thrIds[id], NULL);
 		}
 	}
-	memcpy(matrix, thr_matrix, xres*yres*sizeof(int));
-	msync(matrix, xres*yres*sizeof(int), MS_SYNC);
-	memcpy(colormatrix, thr_colors, xres*yres*sizeof(int));
-	msync(colormatrix, xres*yres*sizeof(int), MS_SYNC);
+	memcpy(matrix, thr_matrix, paras.xres*paras.yres*sizeof(int));
+	msync(matrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
+	memcpy(colormatrix, thr_colors, paras.xres*paras.yres*sizeof(int));
+	msync(colormatrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
 	ui->textFertig(true);
 }
 void quicksort(int *number[],int first,int last){
@@ -123,8 +123,8 @@ void Apple::sort(){
 	iterMembers = NULL;
 	oneMembers = NULL;
 	tenMembers = NULL;
-	for(int x=0; x<xres; x++){
-		for(int y=0; y<yres; y++){
+	for(int x=0; x<paras.xres; x++){
+		for(int y=0; y<paras.yres; y++){
 			bool inarray = false;
 			for(int i=0; i<countsOfIter; i++){
 				if(matrix[x][y] == iterMembers[i][0]){
@@ -204,16 +204,16 @@ Apple::~Apple(){
 }
 
 void Apple::clearScreen(){
-	for(int x=xpos; x<xpos+width; x++)
-		for(int y=ypos; y<ypos+height; y++) ui->display->putSpiegel(x, y, 0x00000000);
+	for(int x=paras.xpos; x<paras.xpos+paras.width; x++)
+		for(int y=paras.ypos; y<paras.ypos+paras.height; y++) ui->display->putSpiegel(x, y, 0x00000000);
 	ui->display->drawSpiegel(0, ui->display->bufferlenght);
 }
 void Apple::paint(){
-	long double fak = (long double)xres / (long double)width;
-	for(int x=xpos; x<xpos+width; x++){
-		for(int y=ypos; y<ypos+height; y++){
-			int cx = (x - xpos)*fak;
-			int cy = (y - ypos)*fak;
+	long double fak = (long double)paras.xres / (long double)paras.width;
+	for(int x=paras.xpos; x<paras.xpos+paras.width; x++){
+		for(int y=paras.ypos; y<paras.ypos+paras.height; y++){
+			int cx = (x - paras.xpos)*fak;
+			int cy = (y - paras.ypos)*fak;
 			ui->display->putSpiegel(x, y, colormatrix[cx][cy]);
 		}
 	}
@@ -223,16 +223,16 @@ void Apple::onMouseOver(int x, int y, int taste){
 	double _rmin, _rmax, _imin, _imax;
 	int newstartx, newendx, newstarty, newendy;
 	int color = 0x00FF00FF;
-	if(width > xres){
-		newendx =  (x - xpos) / ((double)width / xres);
-		newstarty =  (y - ypos) / ((double)height / yres);
+	if(paras.width > paras.xres){
+		newendx =  (x - paras.xpos) / ((double)paras.width / paras.xres);
+		newstarty =  (y - paras.ypos) / ((double)paras.height / paras.yres);
 	}
 	else{
-		newendx =  (x - xpos) * ((double)xres / width);
-		newstarty =  (y - ypos) * ((double)yres / height);
+		newendx =  (x - paras.xpos) * ((double)paras.xres / paras.width);
+		newstarty =  (y - paras.ypos) * ((double)paras.yres / paras.height);
 	}
-	_rmax = rmin+((rmax - rmin) / xres) * (newendx);
-	_imin = imin+((imax - imin) / yres) * (newstarty);
+	_rmax = paras.rmin+((paras.rmax - paras.rmin) / paras.xres) * (newendx);
+	_imin = paras.imin+((paras.imax - paras.imin) / paras.yres) * (newstarty);
 	ui->textComplex(_rmax, _imin);
 	if(taste == 1){//set start- and endpiont
 		if(Startpoint[0] == 0){
@@ -242,7 +242,7 @@ void Apple::onMouseOver(int x, int y, int taste){
 		else{
 			Endpoint[0] = x;
 			Endpoint[1] = y;
-			int ydiff = ((Endpoint[0] - Startpoint[0]) * height) / width;
+			int ydiff = ((Endpoint[0] - Startpoint[0]) * paras.height) / paras.width;
 			if(ydiff < 0) ydiff = ydiff * -1;
 			if(Endpoint[1] < Startpoint[1]) Endpoint[1] = Startpoint[1] - ydiff;
 			else Endpoint[1] = Startpoint[1] + ydiff;
@@ -262,27 +262,27 @@ void Apple::onMouseOver(int x, int y, int taste){
 			Endpoint[1] = tmp;
 		}
 		
-		if(width > xres){
-			newstartx =  (Startpoint[0] - xpos) / ((double)width / xres);
-			newendx =  (Endpoint[0] - xpos) / ((double)width / xres);
-			newstarty =  (Startpoint[1] - ypos) / ((double)height / yres);
-			newendy =  (Endpoint[1] - ypos) / ((double)height / yres);
+		if(paras.width > paras.xres){
+			newstartx =  (Startpoint[0] - paras.xpos) / ((double)paras.width / paras.xres);
+			newendx =  (Endpoint[0] - paras.xpos) / ((double)paras.width / paras.xres);
+			newstarty =  (Startpoint[1] - paras.ypos) / ((double)paras.height / paras.yres);
+			newendy =  (Endpoint[1] - paras.ypos) / ((double)paras.height / paras.yres);
 		}
 		else{
-			newstartx =  (Startpoint[0] - xpos) * ((double)xres / width);
-			newendx =  (Endpoint[0] - xpos) * ((double)xres / width);
-			newstarty =  (Startpoint[1] - ypos) * ((double)yres / height);
-			newendy =  (Endpoint[1] - ypos) * ((double)yres / height);
+			newstartx =  (Startpoint[0] - paras.xpos) * ((double)paras.xres / paras.width);
+			newendx =  (Endpoint[0] - paras.xpos) * ((double)paras.xres / paras.width);
+			newstarty =  (Startpoint[1] - paras.ypos) * ((double)paras.yres / paras.height);
+			newendy =  (Endpoint[1] - paras.ypos) * ((double)paras.yres / paras.height);
 		}
-		_rmin = rmin+((rmax - rmin) / xres) * newstartx;
-		_rmax = rmin+((rmax - rmin) / xres) * newendx;
-		_imin = imin+((imax - imin) / yres) * newstarty;
-		_imax = imin+((imax - imin) / yres) * newendy;
-		rmin=_rmin; rmax=_rmax; imin=_imin; imax=_imax;
-		ui->setWert(2,rmin);
-		ui->setWert(3,rmax);
-		ui->setWert(4,imin);
-		ui->setWert(5,imax);
+		_rmin = paras.rmin+((paras.rmax - paras.rmin) / paras.xres) * newstartx;
+		_rmax = paras.rmin+((paras.rmax - paras.rmin) / paras.xres) * newendx;
+		_imin = paras.imin+((paras.imax - paras.imin) / paras.yres) * newstarty;
+		_imax = paras.imin+((paras.imax - paras.imin) / paras.yres) * newendy;
+		paras.rmin=_rmin; paras.rmax=_rmax; paras.imin=_imin; paras.imax=_imax;
+		ui->setWert(2,paras.rmin);
+		ui->setWert(3,paras.rmax);
+		ui->setWert(4,paras.imin);
+		ui->setWert(5,paras.imax);
 		ui->updateWerte();
 		calc();
 		paint();
@@ -301,39 +301,39 @@ void Apple::init(){
 	int maxheight = ui->display->yres - Reglerheight;
 	int xfak = 1;
 	int divisor = 10;
-	int tmpxres = xres / divisor;
-	int tmpfak = xres / divisor;
+	int tmpxres = paras.xres / divisor;
+	int tmpfak = paras.xres / divisor;
 	while(tmpxres < maxwidth){ xfak++; tmpxres = tmpfak * xfak;}
 	xfak--;
 	int yfak = 1;
-	int tmpyres = yres / divisor;
-	tmpfak = yres / divisor;
+	int tmpyres = paras.yres / divisor;
+	tmpfak = paras.yres / divisor;
 	while(tmpyres < maxheight){ yfak++; tmpyres = tmpfak * yfak;}
 	yfak--;
 	if(xfak < yfak) yfak = xfak;
 	else xfak = yfak;
-	width = xres / divisor * xfak;
-	height = yres / divisor * yfak;
-	xpos = ui->display->xres - width;
-	ypos = 0;
+	paras.width = paras.xres / divisor * xfak;
+	paras.height = paras.yres / divisor * yfak;
+	paras.xpos = ui->display->xres - paras.width;
+	paras.ypos = 0;
 	
-	matrix = (int**)malloc(xres * sizeof(int*));
-	for(int i=0; i<xres; i++)
-		matrix[i] = (int*)malloc(yres * sizeof(int));
-	colormatrix = (int**)malloc(xres * sizeof(int*));
-	for(int i=0; i<xres; i++)
-		colormatrix[i] = (int*)malloc(yres * sizeof(int));
+	matrix = (int**)malloc(paras.xres * sizeof(int*));
+	for(int i=0; i<paras.xres; i++)
+		matrix[i] = (int*)malloc(paras.yres * sizeof(int));
+	colormatrix = (int**)malloc(paras.xres * sizeof(int*));
+	for(int i=0; i<paras.xres; i++)
+		colormatrix[i] = (int*)malloc(paras.yres * sizeof(int));
 }
 void Apple::init(int _xres, int _yres, 
 					long double _rmin,
 					long double _rmax,
 					long double _imin,
 					long double _imax){
-	xres = _xres;
-	yres = _yres;
-	rmin = _rmin;
-	rmax = _rmax;
-	imin = _imin;
-	imax = _imax;
+	paras.xres = _xres;
+	paras.yres = _yres;
+	paras.rmin = _rmin;
+	paras.rmax = _rmax;
+	paras.imin = _imin;
+	paras.imax = _imax;
 	init();
 }

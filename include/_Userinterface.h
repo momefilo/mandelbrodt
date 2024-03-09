@@ -3,6 +3,21 @@
 #include "_Display.h"
 
 #define Reglerheight 150
+
+struct ApplePara{
+	int xpos{};
+	int ypos{};
+	int width{};
+	int height{};
+	int xres{1920};
+	int yres{1080};
+	long double rmin{-1};
+	long double rmax{2};
+	long double imin{-1};
+	long double imax{1};
+	int depth{100};
+};
+
 struct Element{
 	int x{};
 	int y{};
@@ -32,6 +47,7 @@ public:
 	void drawRect(int xstart, int ystart, int xend, int yend, int color);
 	void updateWert(int element);
 	void updateWerte();
+	void setParas(ApplePara para);
 	void setWert(int id, long double wert);
 	long double getWert(int id);
 	void onMouseOver(int x, int y, int taste);

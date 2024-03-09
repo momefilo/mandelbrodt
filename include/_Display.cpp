@@ -36,7 +36,6 @@ Display::Display(){
 				+ std::strerror(errno)
 			};
 		}
-		
 		//alloc fbspiegel
 		if( !(fbspiegel = (uint8_t*)malloc(bufferlenght * sizeof(uint8_t)))){
 			throw std::runtime_error{

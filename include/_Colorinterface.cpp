@@ -111,7 +111,7 @@ void _Colorinterface::addElements(){
 	for(int i=apple->countsOfIter-1; i>=0; i--){
 		_CiElement elem;
 		elem.id = apple->iterMembers[i][0];
-		double div = (255.0/apple->depth) * elem.id;
+		double div = (255.0/apple->paras.depth) * elem.id;
 		elem.color = (int)div<<16 | (int)div<<8 | (int)div;
 		elements.push_back(elem);
 	}
@@ -215,8 +215,8 @@ void _Colorinterface::onMouseOver(int x, int y, int taste){
 
 void _Colorinterface::drawVerlauf(){
 	apple->ui->textFertig(false);
-	for(int x=0; x<apple->xres; x++){
-		for(int y=0; y<apple->yres; y++){
+	for(int x=0; x<apple->paras.xres; x++){
+		for(int y=0; y<apple->paras.yres; y++){
 			for(int i=0; i<elements.size()-1; i++){
 				if(apple->matrix[x][y] == elements.at(i).id){
 					apple->colormatrix[x][y] = elements.at(i).color;
