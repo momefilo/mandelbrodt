@@ -233,45 +233,63 @@ void _Colorinterface::makeVerlauf(){
 	
 	struct _farbe{ int color; int id;};
 	std::vector<struct _farbe> gradient;
-	
-	struct _farbe farbe{elements.at(0).color,0};
-	gradient.push_back(farbe);
-	for(int i=1; i<elements.size(); i++){
+	//get Gradients
+	for(int i=0; i<elements.size(); i++){
 		if(elements.at(i).verlauf){
-			struct _farbe farbe{elements.at(i).color,i};
-			gradient.push_back(farbe);
-		}
-	}
-	struct _farbe farbe2{elements.at((elements.size()-1)).color, (int)(elements.size()-1)};
-	gradient.push_back(farbe2);
+			gradient.push_back(_farbe{elements.at(i).color,i});}}
 	
+	//paint Gradients to elemets
 	for(int i=0; i<gradient.size()-1; i++){
-		//iterdiff
 		int farbe1 = gradient.at(i).color;
 		int farbe2 = gradient.at(i+1).color;
-		if(farbe1 > farbe2 ){ int tmp=farbe1; farbe1=farbe2; farbe2=tmp;};
 		int iter1 = gradient.at(i).id;
 		int iter2 = gradient.at(i+1).id;
 		if(iter1 > iter2 ){ int tmp=iter1; iter1=iter2; iter2=tmp;};
 		int iterdif = iter2 - iter1;
-		uint8_t redt8 = (((0x00FF0000 & farbe2)>>16) - ((0x00FF0000 & farbe1)>>16));
-		uint8_t grnt8 = (((0x0000FF00 & farbe2)>>8) - ((0x0000FF00 & farbe1)>>8));
-		uint8_t blut8 = ((0x000000FF & farbe2) - (0x000000FF & farbe1));
+		
+		//get red
+		bool rednegativ = false;
+		uint8_t redt8;
+		if(((0x00FF0000 & farbe2)>>16) < ((0x00FF0000 & farbe1)>>16)){
+			redt8 = (((0x00FF0000 & farbe1)>>16) - ((0x00FF0000 & farbe2)>>16));
+			rednegativ = true;}
+		else{ redt8 = (((0x00FF0000 & farbe2)>>16) - ((0x00FF0000 & farbe1)>>16));}
 		double reddif = (double)redt8 / iterdif;
-		double grndif = (double)grnt8 / iterdif;
-		double bludif = (double)blut8 / iterdif;
-		int z = 0;
 		uint8_t tmpred = ((0x00FF0000 & farbe1)>>16);
+		
+		//get green
+		bool grnnegativ = false;
+		uint8_t grnt8;
+		if(((0x0000FF00 & farbe2)>>8) < ((0x0000FF00 & farbe1)>>8)){
+			grnt8 = (((0x0000FF00 & farbe1)>>8) - ((0x0000FF00 & farbe2)>>8));
+			grnnegativ = true;}
+		else{ grnt8 = (((0x0000FF00 & farbe2)>>8) - ((0x0000FF00 & farbe1)>>8));}
+		double grndif = (double)grnt8 / iterdif;
 		uint8_t tmpgrn = ((0x0000FF00 & farbe1)>>8);
+		
+		//get blue
+		bool blunegativ = false;
+		uint8_t blut8;
+		if((0x000000FF & farbe2) < (0x000000FF & farbe1)){
+			blut8 = ((0x000000FF & farbe1) - (0x000000FF & farbe2));
+			blunegativ = true;}
+		else{ blut8 = ((0x000000FF & farbe2) - (0x000000FF & farbe1));}
+		double bludif = (double)blut8 / iterdif;
 		uint8_t tmpblu = ((0x000000FF & farbe1)>>0);
+		
+		//base-color to add colordiffs
 		uint8_t tmpcolor[] = {tmpred, tmpgrn, tmpblu};
 		for(int k=iter1; k<iter2; k++){
-			tmpcolor[0] = tmpcolor[0] + reddif;
-			tmpcolor[1] = tmpcolor[1] + grndif;
-			tmpcolor[2] = tmpcolor[2] + bludif;
+			if(rednegativ){ tmpcolor[0] = tmpcolor[0] - reddif;}
+			else{ tmpcolor[0] = tmpcolor[0] + reddif;}
+			if(grnnegativ){ tmpcolor[1] = tmpcolor[1] - grndif;}
+			else{ tmpcolor[1] = tmpcolor[1] + grndif;}
+			if(blunegativ){ tmpcolor[2] = tmpcolor[2] - bludif;}
+			else {tmpcolor[2] = tmpcolor[2] + bludif;}
+			
+			// the color to paint
 			int thecolor = tmpcolor[0]<<16 | tmpcolor[1]<<8 | tmpcolor[2];
 			elements.at(k).color = thecolor;
-			z++;
 		}
 	}
 	showSatz(satzakt);

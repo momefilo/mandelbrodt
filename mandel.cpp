@@ -13,9 +13,7 @@ _Colorinterface *Ci;
 
 std::vector<struct ApplePara> myAppleDatas;
 
-void newApple(){
-	myAppleDatas.push_back(myApple->getPara());
-}
+void newApple(){ myAppleDatas.push_back(myApple->getPara()); }
 
 void ui_callback(int i){
 	if(i<1){//recalc Apple
@@ -59,13 +57,21 @@ void ui_callback(int i){
 	}
 	else if(i == 9){// new Apple
 		newApple();
+		myApple->sort();
+		Ci->addElements();
+		Ci->showSatz(0);
 	}
 };
 void ci_callback(int i){}
 
 void loop(){
 	int fdm = open("/dev/input/mice", O_RDONLY);
-	if (fdm == -1) { exit(EXIT_FAILURE);}
+	if (fdm < 0) {
+		throw std::runtime_error{
+			std::string{ "Failed to open /dev/input/mice " }
+			+ std::strerror(errno)
+		};
+	}
 	int maus_x = myApple->ui->display->xres/2, maus_y = myApple->ui->display->yres/2;
 	int8_t paket[3];
 	int color = 0x00FF00FF;
