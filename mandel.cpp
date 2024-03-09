@@ -142,7 +142,7 @@ int main(){
 		delete Ci;
 		delete myApple;
 		delete Ui;
-//		delete myDisplay;
+		delete myDisplay;
 		return 0;
 	}
 	catch (const std::exception& e){
