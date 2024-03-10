@@ -31,7 +31,6 @@ void saveApple(){
 	file.write( (char*)(&myApple->paras.depth), sizeof(int));
 	file.write( (char*)(&matrix_lenght), sizeof(long int));
 	file.write( (char*)(&myApple->matrix), matrix_lenght);
-	file.write( (char*)(&myApple->colormatrix), matrix_lenght);
 	file.close();
 }
 
