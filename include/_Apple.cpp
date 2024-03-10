@@ -38,11 +38,12 @@ static void *thrFunc(void* val){
 }
 
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
+	std::cout<<"Start calc\n";
 	ui->textFertig(false);
 	free(thr_matrix);
 	free(thr_colors);
-	thr_matrix = 0;
-	thr_colors = 0;
+//	thr_matrix = 0;
+//	thr_colors = 0;
 	thr_matrix = (int**)malloc(paras.xres * sizeof(int*));
 	thr_colors = (int**)malloc(paras.xres * sizeof(int*));
 	if(thr_matrix==0 || thr_colors==0){// Vermutlich unnötig weil die Exception schon zuvor geworfen wird
@@ -70,6 +71,7 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 		int aktThr = 0;
 		while(aktThr < maxThr){
 			tmp_x[aktThr] = x;
+			std::unique_ptr<int> p_tmp_x(new int(x));
 			if(pthread_create( &thrIds[aktThr], NULL, &thrFunc, (void *)tmp_x+aktThr*sizeof(int))){
 				throw std::runtime_error{
 					std::string{ "Failed to start thread " }
@@ -87,7 +89,8 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	msync(matrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
 	memcpy(colormatrix, thr_colors, paras.xres*paras.yres*sizeof(int));
 	msync(colormatrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
-	ui->textFertig(true);
+	std::cout<<"End calc\n";
+	this->ui->textFertig(true);
 }
 void quicksort(int *number[],int first,int last){
 	int i, j, pivot, temp1, temp2;
@@ -193,7 +196,10 @@ void Apple::sort(){
 }
 
 Apple::Apple(Userinterface &_ui){
-	ui = &_ui;	
+	ui = &_ui;
+	matrix = NULL;
+	colormatrix = NULL;
+	std::cout<<"Apple konstrukt\n";
 }
 Apple::~Apple(){
 	free(thr_matrix);
@@ -211,6 +217,7 @@ void Apple::clearScreen(){
 	ui->display->drawSpiegel(0, ui->display->bufferlenght);
 }
 void Apple::paint(){
+	std::cout<<"Start Paint\n";
 	long double fak = (long double)paras.xres / (long double)paras.width;
 	for(int x=paras.xpos; x<paras.xpos+paras.width; x++){
 		for(int y=paras.ypos; y<paras.ypos+paras.height; y++){
@@ -220,6 +227,7 @@ void Apple::paint(){
 		}
 	}
 	ui->display->drawSpiegel(0,ui->display->bufferlenght);
+	std::cout<<"End paint\n";
 }
 void Apple::onMouseOver(int x, int y, int taste){
 	double _rmin, _rmax, _imin, _imax;
@@ -331,6 +339,7 @@ void Apple::init(int _xres, int _yres,
 					long double _rmax,
 					long double _imin,
 					long double _imax){
+	std::cout<<"Start init\n";
 	paras.xres = _xres;
 	paras.yres = _yres;
 	paras.rmin = _rmin;
@@ -338,4 +347,5 @@ void Apple::init(int _xres, int _yres,
 	paras.imin = _imin;
 	paras.imax = _imax;
 	init();
+	std::cout<<"End init\n";
 }

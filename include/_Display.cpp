@@ -37,20 +37,21 @@ Display::Display(){
 			};
 		}
 		//alloc fbspiegel
-		if( !(fbspiegel = (uint8_t*)malloc(bufferlenght * sizeof(uint8_t)))){
+		fbspiegel.resize(bufferlenght);
+/*		if( !(fbspiegel = (uint8_t*)malloc(bufferlenght * sizeof(uint8_t)))){
 			throw std::runtime_error{
 				std::string{ "Failed to acquire fbspiegel " }
 				+ std::strerror(errno)
 			};
 		}
-	}
+*/	}
 }
 
 Display::~Display(){
 	munmap(fbpointer, bufferlenght);
 	close(fbfile);
 	free(fbpointer);
-	free(fbspiegel);
+//	free(fbspiegel);
 }
 
 void Display::putDisplay(int x, int y, int color){
@@ -70,18 +71,18 @@ void Display::putSpiegel(int x, int y, int color){
 			uint16_t farbe = ((((0x00FF0000&color)>>16)/8)<<11) \
 					+ ((((0x0000FF00&color)>>8)/4)<<5) \
 					+ ((0x000000FF&color)/8);
-		*((uint16_t*)(fbspiegel + x*2 + y*linelenght)) = farbe;
+		*((uint16_t*)(&fbspiegel[0] + x*2 + y*linelenght)) = farbe;
 	
 	}
 	else if(bpp == 24){
-		*((uint16_t*)(fbspiegel + x*3 + y*linelenght)) = 0x00FFFFFF&color;
+		*((uint16_t*)(&fbspiegel[0] + x*3 + y*linelenght)) = 0x00FFFFFF&color;
 	}
 }
 
 void Display::drawSpiegel(int offset, int lenght){
 //	for(int i=0; i<bufferlenght; i++) fbpointer[i] = fbspiegel[i];
 	
-	memcpy(fbpointer+offset, fbspiegel, lenght);
+	memcpy(fbpointer+offset, &fbspiegel[0], lenght);
 	msync(fbpointer+offset, lenght, MS_SYNC);
 
 }
