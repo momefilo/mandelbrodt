@@ -39,11 +39,13 @@ static void *thrFunc(void* val){
 
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
-	thr_matrix = NULL;
-	thr_colors = NULL;
-	thr_matrix = (int**)malloc(this->paras.xres * sizeof(int*));
-	thr_colors = (int**)malloc(this->paras.xres * sizeof(int*));
-	if(thr_matrix==0 || thr_colors==0){
+	free(thr_matrix);
+	free(thr_colors);
+	thr_matrix = 0;
+	thr_colors = 0;
+	thr_matrix = (int**)malloc(paras.xres * sizeof(int*));
+	thr_colors = (int**)malloc(paras.xres * sizeof(int*));
+	if(thr_matrix==0 || thr_colors==0){// Vermutlich unnötig weil die Exception schon zuvor geworfen wird
 		throw std::runtime_error{
 			std::string{ "Failed to malloc thr_matrix || thr_colors " }
 			+ std::strerror(errno)

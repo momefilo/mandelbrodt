@@ -22,8 +22,7 @@ class Display{
 	
 private:
 	uint8_t *fbpointer{0};
-	std::vector<std::uint8_t> fbspiegel;
-//	uint8_t *fbspiegel{0};
+	uint8_t *fbspiegel{0};
 	int fbfile;
 public:
 	int xres;
