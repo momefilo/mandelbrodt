@@ -217,12 +217,7 @@ void _Colorinterface::drawVerlauf(){
 	apple->ui->textFertig(false);
 	for(int x=0; x<apple->paras.xres; x++){
 		for(int y=0; y<apple->paras.yres; y++){
-			for(int i=0; i<elements.size()-1; i++){
-				if(apple->matrix[x][y] == elements.at(i).id){
-					apple->colormatrix[x][y] = elements.at(i).color;
-					break;
-				}
-			}
+			apple->colormatrix[x][y] = getColor(apple->matrix[x][y]);
 		}
 	}
 	apple->paint();
@@ -239,7 +234,8 @@ void _Colorinterface::makeVerlauf(){
 			gradient.push_back(_farbe{elements.at(i).color,i});}}
 	
 	//paint Gradients to elemets
-	for(int i=0; i<gradient.size()-1; i++){
+	int tmpsize = gradient.size() - 1;
+	for(int i=0; i<tmpsize; i++){
 		int farbe1 = gradient.at(i).color;
 		int farbe2 = gradient.at(i+1).color;
 		int iter1 = gradient.at(i).id;
@@ -279,6 +275,8 @@ void _Colorinterface::makeVerlauf(){
 		
 		//base-color to add colordiffs
 		uint8_t tmpcolor[] = {tmpred, tmpgrn, tmpblu};
+		
+		//add colordiffs to basecolor and draw them to elements
 		for(int k=iter1; k<iter2; k++){
 			if(rednegativ){ tmpcolor[0] = tmpcolor[0] - reddif;}
 			else{ tmpcolor[0] = tmpcolor[0] + reddif;}

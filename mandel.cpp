@@ -4,6 +4,8 @@
 #include "include/_Colorinterface.h"
 #include "include/_Display.h"
 
+#include <ctime>
+#include <fstream>
 constexpr unsigned int BORDER = 2;
 
 Display *myDisplay;
@@ -12,6 +14,26 @@ Apple *myApple;
 _Colorinterface *Ci;
 
 std::vector<struct ApplePara> myAppleDatas;
+
+void saveApple(){
+	std::string name = std::to_string(time(NULL));
+	name.append(".apple");
+	std::ofstream file(name, std::ios::binary);
+	
+	long int matrix_lenght = myApple->paras.xres * myApple->paras.xres * sizeof(int);
+	
+	file.write( (char*)(&myApple->paras.xres), sizeof(int));
+	file.write( (char*)(&myApple->paras.yres), sizeof(int));
+	file.write( (char*)(&myApple->paras.rmin), sizeof(long double));
+	file.write( (char*)(&myApple->paras.rmax), sizeof(long double));
+	file.write( (char*)(&myApple->paras.imin), sizeof(long double));
+	file.write( (char*)(&myApple->paras.imax), sizeof(long double));
+	file.write( (char*)(&myApple->paras.depth), sizeof(int));
+	file.write( (char*)(&matrix_lenght), sizeof(long int));
+	file.write( (char*)(&myApple->matrix), matrix_lenght);
+	file.write( (char*)(&myApple->colormatrix), matrix_lenght);
+	file.close();
+}
 
 void newApple(){ myAppleDatas.push_back(myApple->getPara()); }
 
@@ -37,10 +59,11 @@ void ui_callback(int i){
 		Ci->showSatz(0);
 	}
 	else if(i<2){//re-sort the Apple
-		myApple->sort();
+		saveApple();
+/*		myApple->sort();
 		Ci->addElements();
 		Ci->showSatz(0);
-	}
+*/	}
 	else if(i==3){//back to previus Apple
 		if(myAppleDatas.size()>1){
 			myAppleDatas.pop_back();
