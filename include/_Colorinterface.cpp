@@ -2,7 +2,7 @@
 
 std::function<void(int)> ci_callback;
 
-_Colorinterface::_Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback){
+Colorinterface::Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback){
 	apple = &myApple;
 	ci_callback = _callback;
 	xpos = x;
@@ -22,15 +22,15 @@ _Colorinterface::_Colorinterface(int x, int y, Apple &myApple, std::function<voi
 	fclose(efile);
 	apple->ui->display->drawSpiegel(0,apple->ui->display->bufferlenght);
 }
-//_Colorinterface::~_Colorinterface(){}
+//Colorinterface::~Colorinterface(){}
 
-int _Colorinterface::getColor(int itter){
+int Colorinterface::getColor(int itter){
 	for(int i=0; i<elements.size(); i++){
 		if(elements.at(i).id == itter) {return elements.at(i).color;}}
 	return -1;
 }
 
-void _Colorinterface::showSatz(int id){
+void Colorinterface::showSatz(int id){
 	//display leeren
 	for(int x=xpos+border; x<xpos+border + width; x++)
 		for(int y=ypos; y<ypos+elem_height; y++)
@@ -59,7 +59,7 @@ void _Colorinterface::showSatz(int id){
 	apple->ui->writeText(xpos, ypos+11, text2, 7, fg, bg, 8,true);
 }
 
-void _Colorinterface::drawElem(int apos, int dpos){
+void Colorinterface::drawElem(int apos, int dpos){
 	uint8_t color[3];
 	color[0] = (elements.at(apos).color & 0x00FF0000) >> 16;
 	color[1] = (elements.at(apos).color & 0x0000FF00) >> 8;
@@ -105,9 +105,8 @@ void _Colorinterface::drawElem(int apos, int dpos){
 	apple->ui->display->drawSpiegel(0, apple->ui->display->bufferlenght);
 }
 
-void _Colorinterface::addElements(){
+void Colorinterface::addElements(){
 	elements.erase(elements.begin(),elements.end());
-	colorgradients.erase(colorgradients.begin(),colorgradients.end());
 	for(int i=apple->countsOfIter-1; i>=0; i--){
 		_CiElement elem;
 		elem.id = apple->iterMembers[i][0];
@@ -122,7 +121,7 @@ void _Colorinterface::addElements(){
 	else satzrest = apple->countsOfIter - satzcount * satz;
 }
 
-void _Colorinterface::onMouseOver(int x, int y, int taste){
+void Colorinterface::onMouseOver(int x, int y, int taste){
 	//azuzeigenden Farbsatz ändern
 	if(x<border/2 
 		&& y>ypos + 50
@@ -213,7 +212,7 @@ void _Colorinterface::onMouseOver(int x, int y, int taste){
 	}
 }
 
-void _Colorinterface::drawVerlauf(){
+void Colorinterface::drawVerlauf(){
 	apple->ui->textFertig(false);
 	for(int x=0; x<apple->paras.xres; x++){
 		for(int y=0; y<apple->paras.yres; y++){
@@ -224,10 +223,9 @@ void _Colorinterface::drawVerlauf(){
 	apple->ui->textFertig(true);
 }
 
-void _Colorinterface::makeVerlauf(){
+void Colorinterface::makeVerlauf(){
 	
-	struct _farbe{ int color; int id;};
-	std::vector<struct _farbe> gradient;
+	gradient.erase(gradient.begin(),gradient.end());
 	//get Gradients
 	for(int i=0; i<elements.size(); i++){
 		if(elements.at(i).verlauf){

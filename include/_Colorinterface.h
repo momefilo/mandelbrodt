@@ -2,12 +2,7 @@
 #define _Colorinterface_h 1
 #include "_Apple.h"
 
-struct _Farbverlauf{
-	int startcolor{0x00000000};
-	int endtcolor{0x00000000};
-	int startiter{};
-	int enditer{};
-};
+struct _farbe{ int color; int id;};
 
 struct _CiElement{
 	int x{};
@@ -18,10 +13,8 @@ struct _CiElement{
 	bool verlauf{false};
 };
 
-class _Colorinterface{
+class Colorinterface{
 private:
-	std::vector<struct _CiElement> elements;
-	std::vector<struct _CiElement> colorgradients;
 	int elem_width{66};
 	int elem_height{Reglerheight};
 	int text_height{30};
@@ -29,12 +22,14 @@ private:
 	int satz, satzcount, satzakt, satzrest;
 public:
 	Apple *apple;
+	std::vector<struct _CiElement> elements;
+	std::vector<struct _farbe> gradient;
 	int xpos;
 	int ypos;
 	int width;
 	int height;
-	_Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback);
-//	~_Colorinterface();
+	Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback);
+//	~Colorinterface();
 	void drawElem(int apos, int dpos);
 	void addElements();
 	void showSatz(int id);

@@ -38,12 +38,9 @@ static void *thrFunc(void* val){
 }
 
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
-	std::cout<<"Start calc\n";
 	ui->textFertig(false);
 	free(thr_matrix);
 	free(thr_colors);
-//	thr_matrix = 0;
-//	thr_colors = 0;
 	thr_matrix = (int**)malloc(paras.xres * sizeof(int*));
 	thr_colors = (int**)malloc(paras.xres * sizeof(int*));
 	if(thr_matrix==0 || thr_colors==0){// Vermutlich unnötig weil die Exception schon zuvor geworfen wird
@@ -85,11 +82,8 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 			pthread_join(thrIds[id], NULL);
 		}
 	}
-	memcpy(matrix, thr_matrix, paras.xres*paras.yres*sizeof(int));
-	msync(matrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
-	memcpy(colormatrix, thr_colors, paras.xres*paras.yres*sizeof(int));
-	msync(colormatrix, paras.xres*paras.yres*sizeof(int), MS_SYNC);
-	std::cout<<"End calc\n";
+	matrix = thr_matrix;
+	colormatrix = thr_colors;
 	this->ui->textFertig(true);
 }
 void quicksort(int *number[],int first,int last){
@@ -125,6 +119,9 @@ void quicksort(int *number[],int first,int last){
 void Apple::sort(){
 	ui->textFertig(false);
 	countsOfIter = 0;
+//	free(iterMembers);
+//	free(oneMembers);
+//	free(tenMembers);
 	iterMembers = NULL;
 	oneMembers = NULL;
 	tenMembers = NULL;
@@ -180,18 +177,8 @@ void Apple::sort(){
 	char text[6][16];
 	sprintf(text[0], "One = % 10d", sm0);
 	sprintf(text[1], "Ten = % 10d", sm1);
-	sprintf(text[2], "Max = % 10d", iterMembers[countsOfIter-1][1]);
-	sprintf(text[3], "Itr = % 10d", iterMembers[countsOfIter-1][0]);
-	if(countsOfIter>1){
-		sprintf(text[4], "Max2= % 10d", iterMembers[countsOfIter-2][1]);
-		sprintf(text[5], "Itr2= % 10d", iterMembers[countsOfIter-2][0]);
-		ui->writeText(2, ui->height + 140, text[4], 16, fgcolor, bgcolor,16, true);
-		ui->writeText(2, ui->height + 160, text[5], 16, fgcolor, bgcolor,16, true);
-	}
 	ui->writeText(2, ui->height + 60, text[0], 16, fgcolor, bgcolor,16, true);
 	ui->writeText(2, ui->height + 80, text[1], 16, fgcolor, bgcolor,16, true);
-	ui->writeText(2, ui->height + 100, text[2], 16, fgcolor, bgcolor,16, true);
-	ui->writeText(2, ui->height + 120, text[3], 16, fgcolor, bgcolor,16, true);
 	ui->textFertig(true);
 }
 
@@ -199,7 +186,6 @@ Apple::Apple(Userinterface &_ui){
 	ui = &_ui;
 	matrix = NULL;
 	colormatrix = NULL;
-	std::cout<<"Apple konstrukt\n";
 }
 Apple::~Apple(){
 	free(thr_matrix);
@@ -217,7 +203,6 @@ void Apple::clearScreen(){
 	ui->display->drawSpiegel(0, ui->display->bufferlenght);
 }
 void Apple::paint(){
-	std::cout<<"Start Paint\n";
 	long double fak = (long double)paras.xres / (long double)paras.width;
 	for(int x=paras.xpos; x<paras.xpos+paras.width; x++){
 		for(int y=paras.ypos; y<paras.ypos+paras.height; y++){
@@ -227,7 +212,6 @@ void Apple::paint(){
 		}
 	}
 	ui->display->drawSpiegel(0,ui->display->bufferlenght);
-	std::cout<<"End paint\n";
 }
 void Apple::onMouseOver(int x, int y, int taste){
 	double _rmin, _rmax, _imin, _imax;
@@ -339,7 +323,6 @@ void Apple::init(int _xres, int _yres,
 					long double _rmax,
 					long double _imin,
 					long double _imax){
-	std::cout<<"Start init\n";
 	paras.xres = _xres;
 	paras.yres = _yres;
 	paras.rmin = _rmin;
@@ -347,5 +330,4 @@ void Apple::init(int _xres, int _yres,
 	paras.imin = _imin;
 	paras.imax = _imax;
 	init();
-	std::cout<<"End init\n";
 }

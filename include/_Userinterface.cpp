@@ -136,14 +136,12 @@ void Userinterface::write_font16x16(int x, int y, char zeichen, int fgcolor, int
 	}
 }
 void Userinterface::writeText(int x, int y, char *text, int len, int fgcolor, int bgcolor, uint8_t size, bool update){
-	std::cout<<"Start writeText\n";
 	if(size == 8)
 		for(int i=0; i<len; i++) write_font8x8(x+i*8, y, text[i], fgcolor, bgcolor);
 	else if(size == 16)
 		for(int i=0; i<len; i++) write_font16x16(x+i*16, y, text[i], fgcolor, bgcolor);
 	//update fb
 	if(update)
-		std::cout<<"in writeText\n";
 		display->drawSpiegel(0,display->bufferlenght);
 }
 void Userinterface::textComplex(double r, double i){// sprintf
@@ -156,19 +154,15 @@ void Userinterface::textComplex(double r, double i){// sprintf
 	writeText(2, height + 8, text[1], 30, fgcolor, bgcolor,8,false);
 }
 void Userinterface::textFertig(bool fertig){// sprintf
-	std::cout<<"Start textFertig\n";
 	char textR[7] = "Rechne";
 	char textF[7] = "Fertig";
 	int fgcolor = 0x00FF0000;
 	int bgcolor = 0x00000000;
 	if(fertig){
 		fgcolor = 0x0000FF00;
-		std::cout<<"in textFertig if\n";
 		writeText(2, height + 20, textF, 6, fgcolor, bgcolor, 16, true);
-		//sprintf(text, "Fertig");
 	}
-	else{std::cout<<"End textFertig else\n";writeText(2, height + 20, textR, 6, fgcolor, bgcolor, 16, true);}
-//	writeText(2, height + 20, text, 6, fgcolor, bgcolor, 16, true);
+	else{writeText(2, height + 20, textR, 6, fgcolor, bgcolor, 16, true);}
 }
 
 void Userinterface::updateWert(int element){// sprintf
