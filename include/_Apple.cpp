@@ -119,12 +119,9 @@ void quicksort(int *number[],int first,int last){
 void Apple::sort(){
 	ui->textFertig(false);
 	countsOfIter = 0;
-//	free(iterMembers);
-//	free(oneMembers);
-//	free(tenMembers);
 	iterMembers = NULL;
-	oneMembers = NULL;
-	tenMembers = NULL;
+	oneMembers.clear();
+	tenMembers.clear();
 	for(int x=0; x<paras.xres; x++){
 		for(int y=0; y<paras.yres; y++){
 			bool inarray = false;
@@ -164,19 +161,14 @@ void Apple::sort(){
 	int sm0 = 0, sm1 = 0;
 	for(int i=0; i<countsOfIter; i++){
 		if(iterMembers[i][1] < 2){
-			sm0++;
-			if( !(oneMembers = (int*)realloc(oneMembers,(sm0 * sizeof(int))))){return;}
-			oneMembers[sm0-1] = iterMembers[i][0];
-		}
+			oneMembers.push_back(iterMembers[i][0]);}
 		else if(iterMembers[i][1] < 11){
-			sm1++;
-			if( !(tenMembers = (int*)realloc(tenMembers,(sm1 * sizeof(int))))){return;}
-			tenMembers[sm1-1] = iterMembers[i][0];
-		}
+			tenMembers.push_back(iterMembers[i][0]);}
 	}
-	char text[6][16];
-	sprintf(text[0], "One = % 10d", sm0);
-	sprintf(text[1], "Ten = % 10d", sm1);
+	char text[2][17];
+	std::cout<<"oneMembeers.size() = "<<oneMembers.size()<<"\n";
+	sprintf(text[0], "oneMembers % 5d", oneMembers.size());
+	sprintf(text[1], "tenMembers % 5d", tenMembers.size());
 	ui->writeText(2, ui->height + 60, text[0], 16, fgcolor, bgcolor,16, true);
 	ui->writeText(2, ui->height + 80, text[1], 16, fgcolor, bgcolor,16, true);
 	ui->textFertig(true);
@@ -191,8 +183,8 @@ Apple::~Apple(){
 	free(thr_matrix);
 	free(thr_colors);
 	free(iterMembers);
-	free(oneMembers);
-	free(tenMembers);
+//	free(oneMembers);
+//	free(tenMembers);
 	free(matrix);
 	free(colormatrix);
 }
@@ -291,6 +283,7 @@ void Apple::onMouseOver(int x, int y, int taste){
 }
 
 void Apple::init(){
+	//scale the Apple to fit in screen
 	int maxwidth = ui->display->xres - (ui->xpos + ui->width);
 	int maxheight = ui->display->yres - Reglerheight;
 	int xfak = 1;
@@ -311,10 +304,12 @@ void Apple::init(){
 	paras.xpos = ui->display->xres - paras.width;
 	paras.ypos = 0;
 	
-	matrix = (int**)malloc(paras.xres * sizeof(int*));
+	//realloc memory for matrix and colormatrix
+	matrix = (int**)realloc(matrix, paras.xres * sizeof(int*));
 	for(int i=0; i<paras.xres; i++)
 		matrix[i] = (int*)malloc(paras.yres * sizeof(int));
-	colormatrix = (int**)malloc(paras.xres * sizeof(int*));
+		
+	colormatrix = (int**)realloc(colormatrix, paras.xres * sizeof(int*));
 	for(int i=0; i<paras.xres; i++)
 		colormatrix[i] = (int*)malloc(paras.yres * sizeof(int));
 }

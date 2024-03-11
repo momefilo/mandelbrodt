@@ -12,7 +12,8 @@ public:
 	ApplePara paras;
 	int **matrix;
 	int **colormatrix;
-	int **iterMembers, *oneMembers, *tenMembers, countsOfIter;
+	int **iterMembers, countsOfIter;
+	std::vector<int> oneMembers, tenMembers;
 	Apple(Userinterface &_ui);
 	~Apple();
 	void paint();
