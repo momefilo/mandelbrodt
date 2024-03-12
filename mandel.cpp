@@ -29,6 +29,7 @@ void ui_callback(int i){
 		
 		myApple->clearScreen();
 		myApple->init(myAppleDatas.back());
+		printf("OK\n");
 		myAppleDatas.back() = myApple->getPara();
 		
 		Ci->addElements();

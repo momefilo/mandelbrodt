@@ -26,6 +26,24 @@ long double delta_r;
 long double delta_i;
 long double thr_imin;
 long double thr_rmin;
+
+void Apple::freeMatrizen(int xres){
+	for(int x=0; x<xres; x++){
+		free(thr_matrix[x]);
+		free(thr_colors[x]);
+	}
+	free(thr_matrix);
+	free(thr_colors);
+}
+void Apple::allocMatrizen(int xres, int yres){
+	thr_matrix = (int**)malloc(xres * sizeof(int*));
+	thr_colors = (int**)malloc(xres * sizeof(int*));
+	for(int i=0; i<paras.xres; i++){
+		thr_matrix[i] = (int*)malloc(yres * sizeof(int));
+		thr_colors[i] = (int*)malloc(yres * sizeof(int));;
+	}
+}
+
 static void *thrFunc(void* val){
 	int *x = (int*)val;
 	for(int y=0; y<thr_yres; y++){
@@ -39,20 +57,6 @@ static void *thrFunc(void* val){
 
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
-//	free(thr_matrix);
-//	free(thr_colors);
-	thr_matrix = (int**)malloc(paras.xres * sizeof(int*));
-	thr_colors = (int**)malloc(paras.xres * sizeof(int*));
-	if(thr_matrix==0 || thr_colors==0){// Vermutlich unnötig weil die Exception schon zuvor geworfen wird
-		throw std::runtime_error{
-			std::string{ "Failed to malloc thr_matrix || thr_colors " }
-			+ std::strerror(errno)
-		};
-	}
-	for(int i=0; i<paras.xres; i++){
-		thr_matrix[i] = (int*)malloc(paras.yres * sizeof(int));
-		thr_colors[i] = (int*)malloc(paras.yres * sizeof(int));
-	}
 	thr_yres = paras.yres;
 	thr_depth = paras.depth;
 	delta_r = (paras.rmax - paras.rmin) / paras.xres;
@@ -118,8 +122,10 @@ void quicksort(int *number[],int first,int last){
 }
 void Apple::sort(){
 	ui->textFertig(false);
+	for(int x=0; x<countsOfIter; x++) free(iterMembers[x]);
+	free(iterMembers);
+	iterMembers = (int**)malloc(1 * sizeof(int *));
 	countsOfIter = 0;
-	iterMembers = NULL;
 	oneMembers.clear();
 	tenMembers.clear();
 	for(int x=0; x<paras.xres; x++){
@@ -176,16 +182,13 @@ void Apple::sort(){
 Apple::Apple(Userinterface &_ui, ApplePara data){
 	ui = &_ui;
 	paras = data;
+	allocMatrizen(paras.xres, paras.yres);
 	init(data);
 }
 Apple::~Apple(){
-	free(thr_matrix);
-	free(thr_colors);
+	freeMatrizen(paras.xres);
+	for(int i=0; i<countsOfIter; i++) free(iterMembers[i]);
 	free(iterMembers);
-//	free(oneMembers);
-//	free(tenMembers);
-	free(matrix);
-	free(colormatrix);
 }
 
 void Apple::clearScreen(){
@@ -282,6 +285,8 @@ void Apple::onMouseOver(int x, int y, int taste){
 }
 
 void Apple::init(ApplePara data){
+	
+	freeMatrizen(paras.xres);
 	//scale the Apple to fit in screen
 	paras = data;
 	int maxwidth = ui->display->xres - (ui->xpos + ui->width);
@@ -304,15 +309,8 @@ void Apple::init(ApplePara data){
 	paras.xpos = ui->display->xres - paras.width;
 	paras.ypos = 0;
 	
-	//realloc memory for matrix and colormatrix
-	matrix = (int**)realloc(matrix, paras.xres * sizeof(int*));
-	for(int i=0; i<paras.xres; i++)
-		matrix[i] = (int*)malloc(paras.yres * sizeof(int));
-		
-	colormatrix = (int**)realloc(colormatrix, paras.xres * sizeof(int*));
-	for(int i=0; i<paras.xres; i++)
-		colormatrix[i] = (int*)malloc(paras.yres * sizeof(int));
-	
+	//malloc memory for matrix and colormatrix
+	allocMatrizen(paras.xres, paras.yres);
 	calc();
 	paint();
 	sort();

@@ -7,6 +7,8 @@ class Apple{
 private:
 	int Startpoint[2]{0,0};
 	int Endpoint[2]{0,0};
+	void allocMatrizen(int xres, int yres);
+	void freeMatrizen(int xres);
 public:
 	Userinterface *ui;
 	ApplePara paras;
