@@ -39,8 +39,8 @@ static void *thrFunc(void* val){
 
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	ui->textFertig(false);
-	free(thr_matrix);
-	free(thr_colors);
+//	free(thr_matrix);
+//	free(thr_colors);
 	thr_matrix = (int**)malloc(paras.xres * sizeof(int*));
 	thr_colors = (int**)malloc(paras.xres * sizeof(int*));
 	if(thr_matrix==0 || thr_colors==0){// Vermutlich unnötig weil die Exception schon zuvor geworfen wird
@@ -166,7 +166,6 @@ void Apple::sort(){
 			tenMembers.push_back(iterMembers[i][0]);}
 	}
 	char text[2][17];
-	std::cout<<"oneMembeers.size() = "<<oneMembers.size()<<"\n";
 	sprintf(text[0], "oneMembers % 5d", oneMembers.size());
 	sprintf(text[1], "tenMembers % 5d", tenMembers.size());
 	ui->writeText(2, ui->height + 60, text[0], 16, fgcolor, bgcolor,16, true);

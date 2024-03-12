@@ -10,7 +10,12 @@ Colorinterface::Colorinterface(int x, int y, Apple &myApple, std::function<void(
 	width = apple->ui->display->xres - border;
 	satz = (width) / elem_width;
 	FILE *efile = fopen("include/graphics/color_cmd.data","rb");
-	if( !efile){return;}
+	if( !efile){
+		throw std::runtime_error{
+			std::string{ "Failed to open include/graphics/color_cmd.data " }
+			+ std::strerror(errno)
+		};
+	}
 	for(int x=xpos; x<xpos+border; x++){
 		for(int y=ypos; y<ypos+elem_height; y++){
 			uint8_t farbe[3];
