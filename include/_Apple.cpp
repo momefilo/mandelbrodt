@@ -173,10 +173,10 @@ void Apple::sort(){
 	ui->textFertig(true);
 }
 
-Apple::Apple(Userinterface &_ui){
+Apple::Apple(Userinterface &_ui, ApplePara data){
 	ui = &_ui;
-	matrix = NULL;
-	colormatrix = NULL;
+	paras = data;
+	init(data);
 }
 Apple::~Apple(){
 	free(thr_matrix);
@@ -281,8 +281,9 @@ void Apple::onMouseOver(int x, int y, int taste){
 	}
 }
 
-void Apple::init(){
+void Apple::init(ApplePara data){
 	//scale the Apple to fit in screen
+	paras = data;
 	int maxwidth = ui->display->xres - (ui->xpos + ui->width);
 	int maxheight = ui->display->yres - Reglerheight;
 	int xfak = 1;
@@ -311,17 +312,8 @@ void Apple::init(){
 	colormatrix = (int**)realloc(colormatrix, paras.xres * sizeof(int*));
 	for(int i=0; i<paras.xres; i++)
 		colormatrix[i] = (int*)malloc(paras.yres * sizeof(int));
-}
-void Apple::init(int _xres, int _yres, 
-					long double _rmin,
-					long double _rmax,
-					long double _imin,
-					long double _imax){
-	paras.xres = _xres;
-	paras.yres = _yres;
-	paras.rmin = _rmin;
-	paras.rmax = _rmax;
-	paras.imin = _imin;
-	paras.imax = _imax;
-	init();
+	
+	calc();
+	paint();
+	sort();
 }

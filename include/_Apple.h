@@ -10,26 +10,19 @@ private:
 public:
 	Userinterface *ui;
 	ApplePara paras;
-	int **matrix;
-	int **colormatrix;
-	int **iterMembers, countsOfIter;
+	int **matrix = nullptr;
+	int **colormatrix = nullptr;
+	int **iterMembers = nullptr, countsOfIter{0};
 	std::vector<int> oneMembers, tenMembers;
-	Apple(Userinterface &_ui);
+	Apple(Userinterface &_ui, ApplePara data);
 	~Apple();
 	void paint();
 	void calc();
 	void sort();
 	void clearScreen();
 	void onMouseOver(int x, int y, int taste);
-	void setPara(ApplePara data){this->paras = data;};
 	ApplePara getPara(){return paras;};
-	void init();
-	void init(int _xres, 
-					int _yres, 
-					long double rmin,
-					long double rmax,
-					long double imin,
-					long double imax);
+	void init(ApplePara data);
 };
 
 

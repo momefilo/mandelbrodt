@@ -27,14 +27,10 @@ void ui_callback(int i){
 		myAppleDatas.back().imax = myApple->ui->getWert(5);
 		myAppleDatas.back().depth = myApple->ui->getWert(6);
 		
-		myApple->setPara(myAppleDatas.back());
 		myApple->clearScreen();
-		myApple->init();
+		myApple->init(myAppleDatas.back());
 		myAppleDatas.back() = myApple->getPara();
 		
-		myApple->calc();
-		myApple->paint();
-		myApple->sort();
 		Ci->addElements();
 		Ci->showSatz(0);
 	}
@@ -52,11 +48,7 @@ void ui_callback(int i){
 			myAppleDatas.pop_back();
 			myApple->clearScreen();			
 			myApple->ui->setParas(myAppleDatas.back());
-			myApple->setPara(myAppleDatas.back());
-			myApple->init();
-			myApple->calc();
-			myApple->paint();
-			myApple->sort();
+			myApple->init(myAppleDatas.back());
 			Ci->addElements();
 			Ci->showSatz(0);
 		}
@@ -131,19 +123,17 @@ void loop(){
 int main(){
 	try{
 		myDisplay = new Display();
+		ApplePara newPara;
+		newPara.xres = myDisplay->xres;
+		newPara.yres = myDisplay->yres;
+		newPara.rmin = -1;
+		newPara.rmax = 2;
+		newPara.imin = -1;
+		newPara.imax = 1;
+		newPara.depth = 100;
 		Ui = new Userinterface(BORDER, BORDER, *myDisplay,  ui_callback);
-		Ui->setWert(0, myDisplay->xres);
-		Ui->setWert(1, myDisplay->yres);
-		Ui->setWert(2, -1);
-		Ui->setWert(3, 2);
-		Ui->setWert(4, -1);
-		Ui->setWert(5, 1);
-		Ui->setWert(6, 100);
-		myApple = new Apple(*Ui);
-		myApple->init(myDisplay->xres, myDisplay->yres, -1, 2, -1, 1);
-		myApple->calc();
-		myApple->paint();
-		myApple->sort();
+		Ui->setParas(newPara);
+		myApple = new Apple(*Ui, newPara);
 		newApple();
 		Ci = new Colorinterface(BORDER, myApple->ui->display->yres - Reglerheight, *myApple, ci_callback);
 		Ci->addElements();
@@ -157,6 +147,7 @@ int main(){
 		delete myApple;
 		delete Ui;
 		delete myDisplay;
+		delete appleMemory;
 		return 0;
 	}
 	catch (const std::exception& e){
