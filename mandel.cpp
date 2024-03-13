@@ -35,12 +35,9 @@ void ui_callback(int i){
 		Ci->addElements();
 		Ci->showSatz(0);
 	}
-	else if(i<2){//re-sort the Apple
+	else if(i<2){//save Apple to Memory
 		appleMemory->saveApple();
-/*		myApple->sort();
-		Ci->addElements();
-		Ci->showSatz(0);
-*/	}
+	}
 	else if(i<3){
 		
 	}

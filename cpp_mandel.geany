@@ -28,12 +28,11 @@ long_line_behaviour=1
 long_line_column=100
 
 [files]
-current_page=1
-FILE_NAME_0=944;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
-FILE_NAME_1=3170;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.cpp;0;4
-FILE_NAME_2=223;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.h;0;4
-FILE_NAME_3=134;Make;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmakefile;0;4
-FILE_NAME_4=765;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Display.h;0;4
+current_page=0
+FILE_NAME_0=1100;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
+FILE_NAME_1=5688;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.cpp;0;4
+FILE_NAME_2=155;Make;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmakefile;0;4
+FILE_NAME_3=765;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Display.h;0;4
 
 [VTE]
 last_dir=/home/momefilo

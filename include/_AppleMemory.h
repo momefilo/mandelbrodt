@@ -3,13 +3,15 @@
 #include "_Colorinterface.h"
 struct MemApple{
 	struct ApplePara paras;
-	int pic[80][45];
+	int pic[100][45];
 };
 class AppleMemory{
 	
 private:
-	int picWidth{80};
+	int picWidth{100};
 	int picHeight{45};
+	int rightBorder{20};
+	int topBorder{50};
 	int satz, satzcount, satzakt, satzrest;
 public:
 	int xpos{0};

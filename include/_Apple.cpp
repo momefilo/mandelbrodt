@@ -72,7 +72,6 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 		int aktThr = 0;
 		while(aktThr < maxThr){
 			tmp_x[aktThr] = x;
-			std::unique_ptr<int> p_tmp_x(new int(x));
 			if(pthread_create( &thrIds[aktThr], NULL, &thrFunc, (void *)tmp_x+aktThr*sizeof(int))){
 				throw std::runtime_error{
 					std::string{ "Failed to start thread " }
@@ -90,48 +89,19 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	colormatrix = thr_colors;
 	this->ui->textFertig(true);
 }
-void quicksort(int *number[],int first,int last){
-	int i, j, pivot, temp1, temp2;
-	if(first<last){
-		pivot=first;
-		i=first;
-		j=last;
 
-		while(i<j){
-			while(number[i][1]<=number[pivot][1]&&i<last) i++;
-			while(number[j][1]>number[pivot][1]) j--;
-			if(i<j){
-				temp1=number[i][0];
-				temp2=number[i][1];
-				number[i][0]=number[j][0];
-				number[i][1]=number[j][1];
-				number[j][0]=temp1;
-				number[j][1]=temp2;
-			}
-		}
-
-	temp1=number[pivot][0];
-	temp2=number[pivot][1];
-	number[pivot][0]=number[j][0];
-	number[pivot][1]=number[j][1];
-	number[j][0]=temp1;
-	number[j][1]=temp2;
-	quicksort(number,first,j-1);
-	quicksort(number,j+1,last);
-	}
+bool mySortFunc(std::array<int, 2> a, std::array<int, 2> b){
+	return a[1] < b[1];
 }
 void Apple::sort(){
 	ui->textFertig(false);
-	for(int x=0; x<countsOfIter; x++) free(iterMembers[x]);
-	free(iterMembers);
-	iterMembers = (int**)malloc(1 * sizeof(int *));
-	countsOfIter = 0;
+	iterMembers.clear();
 	oneMembers.clear();
 	tenMembers.clear();
 	for(int x=0; x<paras.xres; x++){
 		for(int y=0; y<paras.yres; y++){
 			bool inarray = false;
-			for(int i=0; i<countsOfIter; i++){
+			for(int i=0; i<iterMembers.size(); i++){
 				if(matrix[x][y] == iterMembers[i][0]){
 					iterMembers[i][1]++;
 					inarray = true;
@@ -139,33 +109,18 @@ void Apple::sort(){
 				}
 			}
 			if(! inarray){
-				if((countsOfIter % 199) == 0){
-					if( !(iterMembers = (int**)realloc(iterMembers, (countsOfIter +200) * sizeof(int *)))){return;}
-					for(int k=0; k<200; k++){
-						if( !(iterMembers[countsOfIter+k] = (int*)malloc( (2) * sizeof(int)))){return;}
-						iterMembers[countsOfIter+k][0] = -1;
-						iterMembers[countsOfIter+k][1] = -1;
-					}
-					iterMembers[countsOfIter][0] = matrix[x][y];
-					iterMembers[countsOfIter][1] = 1;
-					countsOfIter++;
-				}
-				else{
-					iterMembers[countsOfIter][0] = matrix[x][y];
-					iterMembers[countsOfIter][1] = 1;
-					countsOfIter++;
-				}
+				iterMembers.push_back({matrix[x][y], 1});
 			}
 		}
 	}
-	quicksort(iterMembers,0,countsOfIter-1);
+	std::sort(iterMembers.begin(), iterMembers.end(), mySortFunc);
 	char iterText[17];
 	int fgcolor = 0x00FFFFFF;
 	int bgcolor = 0x00000000;
-	sprintf(iterText, "I-Werte % 8d", countsOfIter);
+	sprintf(iterText, "I-Werte % 8d", iterMembers.size());
 	ui->writeText(2, ui->height + 40, iterText, 16, fgcolor, bgcolor, 16, true);
 	int sm0 = 0, sm1 = 0;
-	for(int i=0; i<countsOfIter; i++){
+	for(int i=0; i<iterMembers.size(); i++){
 		if(iterMembers[i][1] < 2){
 			oneMembers.push_back(iterMembers[i][0]);}
 		else if(iterMembers[i][1] < 11){
@@ -187,8 +142,6 @@ Apple::Apple(Userinterface &_ui, ApplePara data){
 }
 Apple::~Apple(){
 	freeMatrizen(paras.xres);
-	for(int i=0; i<countsOfIter; i++) free(iterMembers[i]);
-	free(iterMembers);
 }
 
 void Apple::clearScreen(){
@@ -267,11 +220,7 @@ void Apple::onMouseOver(int x, int y, int taste){
 		_imin = paras.imin+((paras.imax - paras.imin) / paras.yres) * newstarty;
 		_imax = paras.imin+((paras.imax - paras.imin) / paras.yres) * newendy;
 		paras.rmin=_rmin; paras.rmax=_rmax; paras.imin=_imin; paras.imax=_imax;
-		ui->setWert(2,paras.rmin);
-		ui->setWert(3,paras.rmax);
-		ui->setWert(4,paras.imin);
-		ui->setWert(5,paras.imax);
-		ui->updateWerte();
+		ui->setParas(paras);
 		calc();
 		paint();
 		ui->callback(9);

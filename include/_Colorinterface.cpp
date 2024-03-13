@@ -98,7 +98,7 @@ void Colorinterface::drawElem(int apos, int dpos){
 	
 	char text2[9];//members
 	int members = 1;
-	for(int i=0; i<apple->countsOfIter; i++){
+	for(int i=0; i<apple->iterMembers.size(); i++){
 		if(apple->iterMembers[i][0] == elements.at(apos).id){
 			members = apple->iterMembers[i][1];
 			break;
@@ -112,18 +112,18 @@ void Colorinterface::drawElem(int apos, int dpos){
 
 void Colorinterface::addElements(){
 	elements.erase(elements.begin(),elements.end());
-	for(int i=apple->countsOfIter-1; i>=0; i--){
+	for(int i=apple->iterMembers.size()-1; i>=0; i--){
 		_CiElement elem;
 		elem.id = apple->iterMembers[i][0];
 		double div = (255.0/apple->paras.depth) * elem.id;
 		elem.color = (int)div<<16 | (int)div<<8 | (int)div;
 		elements.push_back(elem);
 	}
-	satzcount = apple->countsOfIter / satz;
+	satzcount = apple->iterMembers.size() / satz;
 	satzakt = 0;
 	satzrest = 0;
-	if(satzcount == 0) satzrest = apple->countsOfIter;
-	else satzrest = apple->countsOfIter - satzcount * satz;
+	if(satzcount == 0) satzrest = apple->iterMembers.size();
+	else satzrest = apple->iterMembers.size() - satzcount * satz;
 }
 
 void Colorinterface::onMouseOver(int x, int y, int taste){
@@ -188,7 +188,7 @@ void Colorinterface::onMouseOver(int x, int y, int taste){
 	int color = 0; //0=blue, 1=green, 2=red
 	if(x>border) 
 		elem_id = (x-border)/elem_width + satzakt * satz;
-	if(elem_id > -1 && elem_id < apple->countsOfIter){
+	if(elem_id > -1 && elem_id < apple->iterMembers.size()){
 		if( (x) - elements.at(elem_id).x < (elem_width-4)/3) {color = 2;}
 		else if( (x) - elements.at(elem_id).x < (elem_width-4)/3*2) {color = 1;}
 		if(y>ypos 

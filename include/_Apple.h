@@ -2,6 +2,7 @@
 #define _Apple_h 1
 #include "_Userinterface.h"
 #include <memory>
+#include <algorithm>
 
 class Apple{
 private:
@@ -14,7 +15,8 @@ public:
 	ApplePara paras;
 	int **matrix = nullptr;
 	int **colormatrix = nullptr;
-	int **iterMembers = nullptr, countsOfIter{0};
+	
+	std::vector<std::array<int, 2>> iterMembers;
 	std::vector<int> oneMembers, tenMembers;
 	Apple(Userinterface &_ui, ApplePara data);
 	~Apple();
