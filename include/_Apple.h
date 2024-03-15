@@ -26,7 +26,7 @@ public:
 	void clearScreen();
 	void onMouseOver(int x, int y, int taste);
 	ApplePara getPara(){return paras;};
-	void init(ApplePara data);
+	void init(ApplePara data, bool _sort);
 };
 
 

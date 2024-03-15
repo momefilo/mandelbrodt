@@ -110,6 +110,13 @@ void Colorinterface::drawElem(int apos, int dpos){
 	apple->ui->display->drawSpiegel(0, apple->ui->display->bufferlenght);
 }
 
+void Colorinterface::initElements(){
+	satzcount = apple->iterMembers.size() / satz;
+	satzakt = 0;
+	satzrest = 0;
+	if(satzcount == 0) satzrest = apple->iterMembers.size();
+	else satzrest = apple->iterMembers.size() - satzcount * satz;
+}
 void Colorinterface::addElements(){
 	elements.erase(elements.begin(),elements.end());
 	for(int i=apple->iterMembers.size()-1; i>=0; i--){
@@ -119,11 +126,7 @@ void Colorinterface::addElements(){
 		elem.color = (int)div<<16 | (int)div<<8 | (int)div;
 		elements.push_back(elem);
 	}
-	satzcount = apple->iterMembers.size() / satz;
-	satzakt = 0;
-	satzrest = 0;
-	if(satzcount == 0) satzrest = apple->iterMembers.size();
-	else satzrest = apple->iterMembers.size() - satzcount * satz;
+	initElements();
 }
 
 void Colorinterface::onMouseOver(int x, int y, int taste){

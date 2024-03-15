@@ -14,6 +14,9 @@ private:
 	int rightBorder{20};
 	int topBorder{50};
 	int satz, satzcount, satzakt, satzrest;
+	void initMemory();
+	void delApple(int id);
+	void loadApple(int id);
 public:
 	int xpos{0};
 	int ypos{0};
@@ -23,9 +26,11 @@ public:
 	std::vector<MemApple> memApples;
 	
 	AppleMemory(int x, int y, Colorinterface &_ci);
+	void onMouseOver(int x, int y, int taste);
 	void writeToFile();
 	void saveApple();
-	void drawApples();
+	void drawApple(int id, int dpos);
+	void showSatz(int _satz);
 };
 
 #endif

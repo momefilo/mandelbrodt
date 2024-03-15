@@ -31,6 +31,7 @@ public:
 	Colorinterface(int x, int y, Apple &myApple, std::function<void(int)> _callback);
 //	~Colorinterface();
 	void drawElem(int apos, int dpos);
+	void initElements();
 	void addElements();
 	void showSatz(int id);
 	int getColor(int id);

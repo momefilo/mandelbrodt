@@ -138,7 +138,7 @@ Apple::Apple(Userinterface &_ui, ApplePara data){
 	ui = &_ui;
 	paras = data;
 	allocMatrizen(paras.xres, paras.yres);
-	init(data);
+	init(data, true);
 }
 Apple::~Apple(){
 	freeMatrizen(paras.xres);
@@ -233,7 +233,7 @@ void Apple::onMouseOver(int x, int y, int taste){
 	}
 }
 
-void Apple::init(ApplePara data){
+void Apple::init(ApplePara data, bool _sort){
 	
 	freeMatrizen(paras.xres);
 	//scale the Apple to fit in screen
@@ -261,6 +261,7 @@ void Apple::init(ApplePara data){
 	//malloc memory for matrix and colormatrix
 	allocMatrizen(paras.xres, paras.yres);
 	calc();
+	clearScreen();
 	paint();
-	sort();
+	if(_sort)sort();
 }

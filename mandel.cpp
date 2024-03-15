@@ -28,7 +28,7 @@ void ui_callback(int i){
 		myAppleDatas.back().depth = myApple->ui->getWert(6);
 		
 		myApple->clearScreen();
-		myApple->init(myAppleDatas.back());
+		myApple->init(myAppleDatas.back(), true);
 		printf("OK\n");
 		myAppleDatas.back() = myApple->getPara();
 		
@@ -46,7 +46,7 @@ void ui_callback(int i){
 			myAppleDatas.pop_back();
 			myApple->clearScreen();			
 			myApple->ui->setParas(myAppleDatas.back());
-			myApple->init(myAppleDatas.back());
+			myApple->init(myAppleDatas.back(), true);
 			Ci->addElements();
 			Ci->showSatz(0);
 		}
@@ -115,6 +115,13 @@ void loop(){
 		if((myApple->ui->display->yres-maus_y) > Ci->ypos){
 			Ci->onMouseOver(maus_x, (myApple->ui->display->yres-maus_y), taste);
 		}
+		//appleMemory
+		if((myApple->ui->display->yres-maus_y) > myApple->ui->height + 105
+				&& (myApple->ui->display->yres-maus_y) < myApple->ui->display->yres - Reglerheight
+				&& maus_x > BORDER
+				&& maus_x < BORDER + appleMemory->width){
+			appleMemory->onMouseOver(maus_x, (myApple->ui->display->yres-maus_y), taste);
+		}
 	}
 }
 
@@ -139,7 +146,7 @@ int main(){
 		Ci->addElements();
 		Ci->showSatz(0);
 		
-		appleMemory = new AppleMemory(BORDER, myApple->ui->height + 125, *Ci);
+		appleMemory = new AppleMemory(BORDER, myApple->ui->height + 105, *Ci);
 
 		loop();
 		//Programmende
