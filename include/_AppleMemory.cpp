@@ -47,6 +47,7 @@ AppleMemory::AppleMemory(int x, int y, Colorinterface &_ci){
 	showSatz(0);
 	
 }
+
 void AppleMemory::initMemory(){
 	satz = (height - topBorder) / (picHeight + 2);
 	satzcount = memApples.size() / satz;
@@ -94,6 +95,7 @@ void AppleMemory::writeToFile(){
 	}
 	file.close();
 }
+
 void AppleMemory::saveApple(){
 	MemApple myApple;
 	myApple.paras = ci->apple->getPara();
@@ -142,6 +144,7 @@ void AppleMemory::delApple(int id){
 	showSatz(0);
 	
 }
+
 void AppleMemory::loadApple(int id){
 	ci->apple->ui->setParas(memApples.at(id).paras);
 	ci->apple->init(memApples.at(id).paras, true);
@@ -150,6 +153,7 @@ void AppleMemory::loadApple(int id){
 	ci->showSatz(0);
 	ci->drawVerlauf();
 }
+
 void AppleMemory::drawApple(int id, int dpos){
 	for(int x=0; x<picWidth; x++){
 		for(int y=0; y<picHeight; y++){
@@ -182,4 +186,68 @@ void AppleMemory::showSatz(int _satz){
 			}
 		}
 	}
+}
+
+void AppleMemory::makeBMP(){
+	//get vars
+	int headerSize = 14;
+	int fillBytes = (ci->apple->paras.xres * 3) % 4;
+	int biSizeImage = ci->apple->paras.yres * ((ci->apple->paras.xres * 3) + fillBytes);
+	int biSize = 40;
+	time_t curr_time;
+	time(&curr_time);
+	std::string filename = std::to_string(curr_time);
+	filename.append(".bmp");
+	
+	//the header struktur
+	std::uint8_t header1 = 0x42;
+	std::uint8_t header2 = 0x4D;
+	int lenght = headerSize + biSize + biSizeImage;
+	int reserv = 0;
+	int offset = 54;
+	//int biSize
+	int biWidth = ci->apple->paras.xres;
+	int biHeight = ci->apple->paras.yres;
+	std::uint16_t biPlanes = 1;
+	std::uint16_t biBitCount = 24;
+	int biCompr = 0;
+	//int biSizeImage
+	int biXPelsPm = 2835;
+	int biYPelsPm = 2835;
+	int biCrlU = 0;
+	int biCrlI = 0;
+	
+	//write header and data to disk
+	std::ofstream file(filename, std::ios::out|std::ios::binary);
+	file.write( (char*)(&header1), sizeof(std::uint8_t));
+	file.write( (char*)(&header2), sizeof(std::uint8_t));
+	file.write( (char*)(&lenght), sizeof(int));
+	file.write( (char*)(&reserv), sizeof(int));
+	file.write( (char*)(&offset), sizeof(int));
+	file.write( (char*)(&biSize), sizeof(int));
+	file.write( (char*)(&biWidth), sizeof(int));
+	file.write( (char*)(&biHeight), sizeof(int));
+	file.write( (char*)(&biPlanes), sizeof(std::uint16_t));
+	file.write( (char*)(&biBitCount), sizeof(std::uint16_t));
+	file.write( (char*)(&biCompr), sizeof(int));
+	file.write( (char*)(&biSizeImage), sizeof(int));
+	file.write( (char*)(&biXPelsPm), sizeof(int));
+	file.write( (char*)(&biYPelsPm), sizeof(int));
+	file.write( (char*)(&biCrlU), sizeof(int));
+	file.write( (char*)(&biCrlI), sizeof(int));
+	for(int y=ci->apple->paras.yres -1; y >= 0; y--){
+		for(int x=0; x<ci->apple->paras.xres; x++){
+			std::uint8_t color[3];
+			color[0] = (ci->apple->colormatrix[x][y] & 0x000000FF);
+			color[1] = (ci->apple->colormatrix[x][y] & 0x0000FF00) >> 8;
+			color[2] = (ci->apple->colormatrix[x][y] & 0x00FF0000) >> 16;
+			for(int i=0; i<3; i++)
+				file.write( (char*)(&color[i]), sizeof(std::uint8_t));
+		}
+		for(int i=0; i<fillBytes; i++){
+			std::uint8_t fill = 0;
+			file.write( (char*)(&fill), sizeof(std::uint8_t));
+		}
+	}
+	file.close();
 }

@@ -1,6 +1,7 @@
 #ifndef _AppleMemory_h
 #define _AppleMemory_h 1
 #include "_Colorinterface.h"
+
 struct MemApple{
 	struct ApplePara paras;
 	int pic[100][45];
@@ -17,6 +18,9 @@ private:
 	void initMemory();
 	void delApple(int id);
 	void loadApple(int id);
+	void drawApple(int id, int dpos);
+	void showSatz(int _satz);
+	void writeToFile();
 public:
 	int xpos{0};
 	int ypos{0};
@@ -27,10 +31,8 @@ public:
 	
 	AppleMemory(int x, int y, Colorinterface &_ci);
 	void onMouseOver(int x, int y, int taste);
-	void writeToFile();
 	void saveApple();
-	void drawApple(int id, int dpos);
-	void showSatz(int _satz);
+	void makeBMP();
 };
 
 #endif

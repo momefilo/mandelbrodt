@@ -52,6 +52,7 @@ void ui_callback(int i){
 	}
 	else if(i<5){
 		appleMemory->saveApple();
+		appleMemory->makeBMP();
 	}
 	else if(i == 9){// new Apple
 		newApple();
