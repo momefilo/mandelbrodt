@@ -8,12 +8,40 @@ AppleMemory::AppleMemory(int x, int y, Colorinterface &_ci){
 	ci = &_ci;
 	std::ifstream file("mem.Apples", std::ios::in|std::ios::binary);
 	if(!file.fail()){
+		int count = 0;
 		file.read((char*) &count, sizeof(int));
 		memApples.resize(count);
-		file.read(reinterpret_cast<char *> (&memApples[0]), count * sizeof(memApples[0]));
+		for(int i=0;i<count; i++){
+			int size = 0;
+			file.read(reinterpret_cast<char *> (&memApples[i].paras), sizeof(memApples[i].paras));
+			file.read(reinterpret_cast<char *> (&memApples[i].pic), sizeof(memApples[i].pic));
+			file.read((char*) &size, sizeof(int));
+			memApples.at(i).ci_elements.resize(size);
+			
+			file.read(reinterpret_cast<char *> 
+					(&memApples[i].ci_elements[0]),size * sizeof(memApples[i].ci_elements[0]));
+		}
 		file.close();
 		drawApples();
 	}
+}
+void AppleMemory::writeToFile(){
+	std::ofstream file("mem.Apples", std::ios::out|std::ios::binary);
+	int count = memApples.size();
+	file.write( (char*)(&count), sizeof(int));
+	for(int i=0; i<memApples.size(); i++){
+		file.write(reinterpret_cast<char*>(&memApples[i].paras),
+				sizeof(memApples[i].paras));
+		file.write(reinterpret_cast<char*>(&memApples[i].pic),
+				sizeof(memApples[i].pic));
+		
+		int elem_size = memApples.at(i).ci_elements.size();
+		file.write( (char*)(&elem_size), sizeof(int));
+		
+		file.write(reinterpret_cast<char*>(&memApples[i].ci_elements[0]),
+			elem_size * sizeof(memApples[i].ci_elements[0]));
+	}
+	file.close();
 }
 void AppleMemory::saveApple(){
 	MemApple myApple;
@@ -47,13 +75,10 @@ void AppleMemory::saveApple(){
 			else myApple.pic[x][y] = 0x00FF0000;
 		}
 	}
+//	myApple.ci_elements = ci->elements;
+	std::copy(ci->elements.begin(), ci->elements.end(),back_inserter(myApple.ci_elements));
 	memApples.push_back(myApple);
-	printf("i_xres=%d, i_yres=%d, picWidth=%d, picHeight=%d\n", i_xres, i_yres, picWidth, picHeight);
-	count++;
-	std::ofstream file("mem.Apples", std::ios::out|std::ios::binary);
-	file.write( (char*)(&count), sizeof(int));
-	file.write(reinterpret_cast<char*>(&memApples[0]), memApples.size() * sizeof(memApples[0]));
-	file.close();
+	writeToFile();
 	drawApples();
 }
 

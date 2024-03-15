@@ -4,6 +4,7 @@
 struct MemApple{
 	struct ApplePara paras;
 	int pic[100][45];
+	std::vector<struct _CiElement> ci_elements;
 };
 class AppleMemory{
 	
@@ -18,11 +19,11 @@ public:
 	int ypos{0};
 	int width{100};
 	int height{0};
-	int count{0};
 	Colorinterface *ci;
 	std::vector<MemApple> memApples;
 	
 	AppleMemory(int x, int y, Colorinterface &_ci);
+	void writeToFile();
 	void saveApple();
 	void drawApples();
 };

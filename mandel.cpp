@@ -120,6 +120,8 @@ void loop(){
 
 int main(){
 	try{
+		printf("int=%d; long double=%d; bool=%d\n",
+			sizeof(int), sizeof(long double), sizeof(bool));
 		myDisplay = new Display();
 		ApplePara newPara;
 		newPara.xres = myDisplay->xres;
