@@ -138,11 +138,11 @@ void AppleMemory::saveApple(){
 void AppleMemory::delApple(int id){
 	memApples.erase(memApples.begin()+id);
 	initMemory();
+	writeToFile();
 	showSatz(0);
 	
 }
 void AppleMemory::loadApple(int id){
-	printf("loadApple(%d)\n",id);
 	ci->apple->init(memApples.at(id).paras, true);
 	ci->elements = memApples.at(id).ci_elements;
 	ci->initElements();

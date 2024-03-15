@@ -29,7 +29,6 @@ void ui_callback(int i){
 		
 		myApple->clearScreen();
 		myApple->init(myAppleDatas.back(), true);
-		printf("OK\n");
 		myAppleDatas.back() = myApple->getPara();
 		
 		Ci->addElements();
@@ -127,8 +126,6 @@ void loop(){
 
 int main(){
 	try{
-		printf("int=%d; long double=%d; bool=%d\n",
-			sizeof(int), sizeof(long double), sizeof(bool));
 		myDisplay = new Display();
 		ApplePara newPara;
 		newPara.xres = myDisplay->xres;
