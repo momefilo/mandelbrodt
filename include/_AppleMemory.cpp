@@ -143,6 +143,7 @@ void AppleMemory::delApple(int id){
 	
 }
 void AppleMemory::loadApple(int id){
+	ci->apple->ui->setParas(memApples.at(id).paras);
 	ci->apple->init(memApples.at(id).paras, true);
 	ci->elements = memApples.at(id).ci_elements;
 	ci->initElements();

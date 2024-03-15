@@ -27,7 +27,7 @@ void ui_callback(int i){
 		myAppleDatas.back().imax = myApple->ui->getWert(5);
 		myAppleDatas.back().depth = myApple->ui->getWert(6);
 		
-		myApple->clearScreen();
+//		myApple->clearScreen();
 		myApple->init(myAppleDatas.back(), true);
 		myAppleDatas.back() = myApple->getPara();
 		
@@ -35,7 +35,7 @@ void ui_callback(int i){
 		Ci->showSatz(0);
 	}
 	else if(i<2){//save Apple to Memory
-		appleMemory->saveApple();
+		
 	}
 	else if(i<3){
 		
@@ -49,6 +49,9 @@ void ui_callback(int i){
 			Ci->addElements();
 			Ci->showSatz(0);
 		}
+	}
+	else if(i<5){
+		appleMemory->saveApple();
 	}
 	else if(i == 9){// new Apple
 		newApple();
