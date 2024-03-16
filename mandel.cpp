@@ -146,16 +146,16 @@ int main(){
 		Ci = new Colorinterface(BORDER, myApple->ui->display->yres - Reglerheight, *myApple, ci_callback);
 		Ci->addElements();
 		Ci->showSatz(0);
-		
 		appleMemory = new AppleMemory(BORDER, myApple->ui->height + 105, *Ci);
 
 		loop();
+		
 		//Programmende
+		delete appleMemory;
 		delete Ci;
 		delete myApple;
 		delete Ui;
 		delete myDisplay;
-		delete appleMemory;
 		return 0;
 	}
 	catch (const std::exception& e){
