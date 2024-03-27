@@ -28,15 +28,17 @@ long_line_behaviour=1
 long_line_column=100
 
 [files]
-current_page=2
-FILE_NAME_0=240;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
-FILE_NAME_1=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_AppleMemory.h;0;4
-FILE_NAME_2=11;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fstart.sh;0;4
-FILE_NAME_3=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.h;0;4
-FILE_NAME_4=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.h;0;4
-FILE_NAME_5=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Userinterface.h;0;4
-FILE_NAME_6=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Display.h;0;4
-FILE_NAME_7=401;Make;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmakefile;0;4
+current_page=0
+FILE_NAME_0=1031;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
+FILE_NAME_1=8178;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.cpp;0;4
+FILE_NAME_2=7989;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_AppleMemory.cpp;0;4
+FILE_NAME_3=792;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_AppleMemory.h;0;4
+FILE_NAME_4=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.h;0;4
+FILE_NAME_5=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.h;0;4
+FILE_NAME_6=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Userinterface.h;0;4
+FILE_NAME_7=18;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Display.h;0;4
+FILE_NAME_8=11;Sh;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fstart.sh;0;4
+FILE_NAME_9=401;Make;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmakefile;0;4
 
 [VTE]
 last_dir=/home/momefilo

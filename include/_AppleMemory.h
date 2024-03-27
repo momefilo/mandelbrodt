@@ -34,6 +34,7 @@ public:
 	void onMouseOver(int x, int y, int taste);
 	void saveApple();
 	void makeBMP();
+	void makeApplesequence();
 };
 
 #endif
