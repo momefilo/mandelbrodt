@@ -28,9 +28,9 @@ long_line_behaviour=1
 long_line_column=100
 
 [files]
-current_page=2
+current_page=1
 FILE_NAME_0=1463;C++;0;EISO-8859-15;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Fmandel.cpp;0;4
-FILE_NAME_1=2927;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.cpp;0;4
+FILE_NAME_1=21;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.cpp;0;4
 FILE_NAME_2=366;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Apple.h;0;4
 FILE_NAME_3=0;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Userinterface.h;0;4
 FILE_NAME_4=9382;C++;0;EUTF-8;1;1;0;%2Fhome%2Fmomefilo%2Fpico%2Fprojekte%2Fremote%2Fmandelbrodt%2Finclude%2F_Colorinterface.cpp;0;4
