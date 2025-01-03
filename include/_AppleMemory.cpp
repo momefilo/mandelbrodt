@@ -196,7 +196,9 @@ void AppleMemory::makeBMP(){
 	int biSize = 40;
 	time_t curr_time;
 	time(&curr_time);
-	std::string filename = std::to_string(curr_time);
+//	std::string filename = std::to_string(curr_time);
+	std::string filename = "bmp/";
+	filename.append(std::to_string(curr_time));
 	filename.append(".bmp");
 	
 	//the header struktur
@@ -253,11 +255,19 @@ void AppleMemory::makeBMP(){
 }
 
 void AppleMemory::makeApplesequence(){
-	if(memApples.size() > 1){
-		int depthdiff = memApples.at(1).paras.depth - memApples.at(1).paras.depth;
-		long double rmindiff = (memApples.at(1).paras.rmin - memApples.at(1).paras.rmin) / depthdiff;
-		long double rmaxdiff = (memApples.at(1).paras.rmax - memApples.at(1).paras.rmax) / depthdiff;
-		long double imindiff = (memApples.at(1).paras.imin - memApples.at(1).paras.imin) / depthdiff;
-		long double imaxdiff = (memApples.at(1).paras.imax - memApples.at(1).paras.imax) / depthdiff;
+	int aktTiefe = ci->apple->getDepth();
+	int x = 0;
+	char text[2][17];
+	ci->apple->ui->textFertig(false);
+	while(x<aktTiefe){
+		x++;
+		ci->apple->setDepth(x);
+		ci->apple->calc();
+		makeBMP();
+		sprintf(text[0], "berechnete % 5d", x);
+		sprintf(text[1], "von        % 5d", aktTiefe);
+		ci->apple->ui->writeText(2, ci->apple->ui->height + 60, text[0], 16, 0x00FFFFFF, 0x00000000,16, true);
+		ci->apple->ui->writeText(2, ci->apple->ui->height + 80, text[1], 16, 0x00FFFFFF, 0x00000000,16, true);
 	}
+	ci->apple->ui->textFertig(true);
 }

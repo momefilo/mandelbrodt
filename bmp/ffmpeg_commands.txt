@@ -1,0 +1,2 @@
+ffmpeg -f image2 -framerate 15 -i %*.bmp -c:v libx264 -preset slow -crf 18 movie_slow.mp4
+ffmpeg -i %*.bmp -r 25 -c:v libx264 -preset slow -crf 18 movie.mp4

@@ -25,6 +25,8 @@ public:
 	void calc();
 	void sort();
 	void clearScreen();
+	void setDepth(int tiefe);
+	int getDepth();
 	void onMouseOver(int x, int y, int taste);
 	ApplePara getPara(){return paras;};
 	void init(ApplePara data, bool _sort);

@@ -36,7 +36,7 @@ void ui_callback(int i){
 		
 	}
 	else if(i<3){
-		
+		appleMemory->makeApplesequence();
 	}
 	else if(i<4){//back to previus Apple
 		if(myAppleDatas.size()>1){

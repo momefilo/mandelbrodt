@@ -50,13 +50,22 @@ static void *thrFunc(void* val){
 		thr_matrix[*x][y] = getIterCount(thr_rmin+(*x)*delta_r, thr_imin+y*delta_i, thr_depth);
 		double div = (255.0/thr_depth) * thr_matrix[*x][y];
 		int color = (int)div<<16 | (int)div<<8 | (int)div;
+// hier koennen die Farben zu den Spektren hin verschoben werden
+//		int color = (int)(div/3*3)<<16 | (int)(div/4*1)<<8 | (int)div/4*1;
 		thr_colors[*x][y] = color;
 	}
 	return NULL;
 }
 
+void Apple::setDepth(int tiefe){
+	paras.depth = tiefe;
+}
+int Apple::getDepth(){
+	return paras.depth;
+}
+
 void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
-	ui->textFertig(false);
+//	ui->textFertig(false);
 	thr_yres = paras.yres;
 	thr_depth = paras.depth;
 	delta_r = (paras.rmax - paras.rmin) / paras.xres;
@@ -87,7 +96,7 @@ void Apple::calc(){// start <=13 Threads to fill AppleColors and AppleMatrix
 	}
 	matrix = thr_matrix;
 	colormatrix = thr_colors;
-	this->ui->textFertig(true);
+//	this->ui->textFertig(true);
 }
 
 bool mySortFunc(std::array<int, 2> a, std::array<int, 2> b){
