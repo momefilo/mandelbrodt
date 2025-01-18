@@ -96,7 +96,8 @@ Bild: Drei vollständig und ein teilweise zu sehender Farbgeber. Links im Bild
 die Navigations- und Befehlsbuttons der Farbgebung\
 Da die Menge an Farbgebern meist nicht in einem Satz sichtbar ist, zeigt
 die obere Zahl im gelb markierten Bereich den aktuell angezeigten Satz
-und die Untere die Anzahl an Farbgeber-Sätzen an.\
+und die Untere die Anzahl an Farbgeber-Sätzen an. Mit einem Klick auf die Zahlen des
+Farbgebers werden die RGB-Werte dessen zu 0.\
 Die Pfeilbuttons dienen der Navigation innerhalb der Sätze. Die Farbe
 kann durch ziehen der Farbbalken im Farbgeber mit der Maus eingestellt
 werden und wird im waagerechten Balken unter der Anzahl an Bildpunkten
@@ -107,8 +108,7 @@ Farbverlaufes zwischen mindestens zwei solcher markierten Farbgebern
 ist. Diesen können wir mit einem Klick auf den linken Button im
 magentafarben markierten Bereich des Bildes erstellen. Der rechte Button
 dient der Übertragung der in den Farbgebern eingestellten Farben auf
-das Apfelmännchen. Mit einem Klick auf die Zahlen des
-Farbgebers werden die RGB-Werte dessen zu 0.
+das Apfelmännchen.
 
 Im Anhang „Code-Einsprungpunkt" wird auf eine Zeile im Quelltext
 verwiesen, dessen Änderung eine Verschiebung des Schwarz-weißen
