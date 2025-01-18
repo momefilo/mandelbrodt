@@ -152,24 +152,20 @@ Programms erdacht werden kann.
 Seite 4
 
 **Speichern der Apfelmännchen**
-
-+-----------------------------------+-----------------------------------+
-| ![](vertopal_7                    | > Mit einem Klick auf „save" wird |
-| 043454174a54f35bb26a94c2224a585/m | > ein BMP-Bild des dargestellten  |
-| edia/image5.png)                  | > Zeit als Namen im Ordner „bmp"  |
-|                                   | > der Programmdatei abgelegt.     |
-|                                   | > Gleichzeitig wird das           |
-|                                   | > Apfelmännchen mit seinen        |
-|                                   | > Farbgebern in der Leiste wie    |
-|                                   | > sie im Bild links zu sehen ist, |
-|                                   | > gespeichert und kann durch      |
-|                                   | > klicken auf das kleine Abbild   |
-|                                   | > aufgerufen werden. Ein Klick    |
-|                                   | > auf die rote Fläche neben dem   |
-|                                   | > Abbild löscht das gespeicherte  |
-|                                   | > Apfelmännchen.                  |
-+===================================+===================================+
-+-----------------------------------+-----------------------------------+
+ ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image5.png)
+Mit einem Klick auf „save" wird
+ein BMP-Bild des dargestellten
+Zeit als Namen im Ordner „bmp"
+der Programmdatei abgelegt.
+Gleichzeitig wird das
+Apfelmännchen mit seinen
+Farbgebern in der Leiste wie 
+sie im Bild links zu sehen ist,
+gespeichert und kann durch klicken auf das kleine Abbild
+aufgerufen werden. Ein Klick
+auf die rote Fläche neben dem
+Abbild löscht das gespeicherte
+Apfelmännchen.
 
 **Sortierergebnisse**
 
