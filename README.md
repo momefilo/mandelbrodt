@@ -102,17 +102,12 @@ kann durch ziehen der Farbbalken im Farbgeber mit der Maus eingestellt
 werden und wird im waagerechten Balken unter der Anzahl an Bildpunkten
 dargestellt. Ein Klick auf diesen Querbalken färbt die Zahlen weis und
 zeigt somit an, das dieser Farbgeber einen Festen Wert innerhalb eines
-zu erstellenden\
+zu erstellenden 
 Farbverlaufes zwischen mindestens zwei solcher markierten Farbgebern
 ist. Diesen können wir mit einem Klick auf den linken Button im
 magentafarben markierten Bereich des Bildes erstellen. Der rechte Button
 dient der Übertragung der in den Farbgebern eingestellten Farben auf
-das Apfelmännchen. Die Implementierung des Farbverlaufs zwischen den
-Farbgeber ist nicht vollständig durchdacht, so das hier Experimentieren
-vorausgesetzt wird (der Wert jeder zu ändernden Farbe des Verlaufs
-sollte größer null sein im Farbgeber und die Verläufen sollten drei
-Sätze nicht überschreiten sowie von links beginnend nach rechts
-nacheinander übertragen werden) Mit einem Klick auf die Zahlen des
+das Apfelmännchen. Mit einem Klick auf die Zahlen des
 Farbgebers werden die RGB-Werte dessen zu 0.
 
 Im Anhang „Code-Einsprungpunkt" wird auf eine Zeile im Quelltext
