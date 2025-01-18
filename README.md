@@ -173,7 +173,7 @@ mit anderer Anzahl an Bildpunkten errechnen lässt.
 **Anhang**
 ***Mathematische Beschreibung***
 
-*Depth*=*Maximale Iterationsanzahl b*∈ℕ∖0 *Depth*\
+*Depth*=*Maximale Iterationsanzahl b*∈ℕ∖0 \
 *X*−*Res*= Anzahlder Bildpunkte der x*−*Achse m*∈ℕ∖(0,1)
 Minimaldes Realanteils der Zahlenebene rmin*∈ℚ (gewöhnlich −1)
 Maximal des Realanteilsder Zahlenebene rmax*∈ℚ (*gewöhnlich* 2)
