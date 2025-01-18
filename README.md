@@ -110,8 +110,7 @@ Farbverlaufes zwischen mindestens zwei solcher markierten Farbgebern
 ist. Diesen können wir mit einem Klick auf den linken Button im
 magentafarben markierten Bereich des Bildes erstellen. Der rechte Button
 dient der Übertragung der in den Farbgebern eingestellten Farben auf
-das\
-Apfelmännchen. Die Implementierung des Farbverlaufs zwischen den
+das Apfelmännchen. Die Implementierung des Farbverlaufs zwischen den
 Farbgeber ist nicht vollständig durchdacht, so das hier Experimentieren
 vorausgesetzt wird (der Wert jeder zu ändernden Farbe des Verlaufs
 sollte größer null sein im Farbgeber und die Verläufen sollten drei
@@ -122,9 +121,8 @@ Farbgebers werden die RGB-Werte dessen zu 0.
 Im Anhang „Code-Einsprungpunkt" wird auf eine Zeile im Quelltext
 verwiesen, dessen Änderung eine Verschiebung des Schwarz-weißen
 Apfelmännchens innerhalb des Spektralbereich ermöglicht, und als
-Einsprungpunkt algorithmischen Farbgebungs-Codes dient, dessen\
-Spezifikation(Parameter?,Ziel?) durch Umgang mit den Farbgebern des
-Programms erdacht werden kann.
+Einsprungpunkt algorithmischen Farbgebungs-Codes dient, dessen
+Spezifikation(Parameter?,Ziel?) durch Umgang mit den Farbgebern des Programms erdacht werden kann.
 
 **Speichern der Apfelmännchen**\
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image5.png)
