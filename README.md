@@ -2,23 +2,11 @@
 
 Edit:\
 Das Programm enthält eine, hier nicht weiter dokumentierte
-Serienaufnahme-Funktion die alle
-
-Apfelmännchen mit einem Depth-Wert bei 1 beginnend, bis zu im Programm
-bereits berechneten
-
-Depth-Wert und der anderer Parameter berechnet und deren BMP-Bilddateien
-im Ordner „bmp"
-
+Serienaufnahme-Funktion die alle Apfelmännchen mit einem Depth-Wert bei 1 beginnend, bis zu im Programm
+bereits berechneten Depth-Wert und der anderer Parameter berechnet und deren BMP-Bilddateien im Ordner „bmp"
 speichert. Der Button „Seq" startet die recht zeitaufwendige Prozedur.
-Doch danach können mittels
-
-„ffmpeg" interessante Videos der Änderung der Mandelbrodtmenge über die
-Iterationstiefe erstellt
-
-werden.
-
-Seite 1
+Doch danach können mittels „ffmpeg" interessante Videos der Änderung der Mandelbrodtmenge über die
+Iterationstiefe erstellt werden.
 
 **Wichtig:** Zum Start der Anwendung muss das „start.sh"-Script mit
 sudo-rechten aufgerufen werden
@@ -37,7 +25,6 @@ werden Begriffe gebraucht die im Folgendem erörtert sind.
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png)
 
 **Zoomen**
-
 Wir „zoomen in das Apfelmännchen in dem wir den kleinen magentafrbenen
 „Maus-Quader" des Programms, durch Drücken und Halten der linken
 Maustaste den Startpunkt und durch bewegen der Maus zum Endpunkt, diese
@@ -45,10 +32,7 @@ Punkte mit einem zusätzlichen rechten Mausklick festlegen. Das Programm
 beginnt unmittelbar mit der Neuberechnung\
 **Wichtig**: Die interessanten Teile des Apfelmännchen sind die Ränder
 
-Seite 2
-
 **X-Res und Y-Res**
-
 Diese Parameter legen die Auflösung des zu berechnenden Apfelmännchen
 fest in der es auch als Bild gespeichert wird, aber nicht unbedingt die
 im Programm dargestellte. Das Programm skaliert das Apfelmännchen so das
@@ -58,7 +42,6 @@ genaue Abbildung des Apfelmännchens zu erreichen ist hier ein 3 zu 2
 Format zu wählen.
 
 **r-Min/Max und i-Min/Max**
-
 Diese Parameter sind zur Bedienung des Programms nicht nötig und
 überspringbar\
 Die Abbildungen der Apfelmännchen-Struktur errechnen sich durch
@@ -73,7 +56,6 @@ durch ändern der i/r-min/max Werte von Hand, am besten direkt nach dem
 Start des Programms berechnen und abbilden lassen
 
 **Depth**
-
 Das im oberen Bild zu sehende SW-Apfelmännchen entsteht durch
 Grauabstufung in Abhängigkeit davon, wie oft ein Algorithmus auf den
 Bildpunkt angewendet werden muss bis dessen Ergebnis eine
@@ -89,10 +71,7 @@ anhand deren Iterationstiefen fest. Erhöhen wir den Startwert Depth von
 100 auf 500 und klicken auf „Calc", haben wir in weniger als einer
 Sekunde einen Eindruck der graphischen Wirkung in Schwarzweiß.
 
-Seite 3
-
 **Farbgestaltung**
-
 Um die Farbgestaltung zu verstehen, stellen wir uns die Iterationstiefen
 als Zahlenstrahl von Null bis zu unserem vorgegeben Depth-Wert mit
 Lücken vor, dem wir die Menge aller Bildpunkte zuordnen. So sind der
@@ -105,7 +84,6 @@ bedeutet das der Bildpunkt bis zum Depth-Wert die Abbruchbedingung nicht
 erfüllt hat.
 
 **Farbgeber**
-
 Das Programm bietet für jede Iterationstiefe einen RGB-Farbgeber, mit
 dem die Farbe aller Bildpunkte welche der Iterationstiefe entsprechen
 vorgegeben werden kann. Wichtig zu wissen das die obere der beiden
@@ -149,13 +127,10 @@ Einsprungpunkt algorithmischen Farbgebungs-Codes dient, dessen\
 Spezifikation(Parameter?,Ziel?) durch Umgang mit den Farbgebern des
 Programms erdacht werden kann.
 
-Seite 4
-
 **Speichern der Apfelmännchen**\
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image5.png)
 Mit einem Klick auf „save" wird
-ein BMP-Bild des dargestellten
-Zeit als Namen im Ordner „bmp"
+ein BMP-Bild des Männchens mit der Zeit als als Namen im Ordner „bmp"
 der Programmdatei abgelegt.
 Gleichzeitig wird das
 Apfelmännchen mit seinen
@@ -168,7 +143,6 @@ Abbild löscht das gespeicherte
 Apfelmännchen.
 
 **Sortierergebnisse**
-
 > ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image6.png)
 
 ***r und i***\
@@ -196,18 +170,13 @@ Im Anhang „Sortierwerte" diesen Dokuments wird der Programmcode
 aufgezeigt ,welcher durch Zahlenänderung die Ergebnisse one/tenMember
 mit anderer Anzahl an Bildpunkten errechnen lässt.
 
-Seite 5
+**Anhang**
+***Mathematische Beschreibung***
 
-> **Anhang**
->
-> ***Mathematische Beschreibung***
->
-> *Depth*=*Maximale Iterationsanzahl b*∈ℕ∖0 *Depth*\
-> *X*−*Res*= *Anzahlder Bildpunkte der x*−*Achse m*∈ℕ∖(0,1)
->
-> *Minimaldes Realanteils der Zahlenebene rmin*∈ℚ (*gewöhnlich* −1)
->
-> *Maximal des Realanteilsder Zahlenebene rmax*∈ℚ (*gewöhnlich* 2)
+*Depth*=*Maximale Iterationsanzahl b*∈ℕ∖0 *Depth*\
+*X*−*Res*= Anzahlder Bildpunkte der x*−*Achse m*∈ℕ∖(0,1)
+Minimaldes Realanteils der Zahlenebene rmin*∈ℚ (gewöhnlich −1)
+Maximal des Realanteilsder Zahlenebene rmax*∈ℚ (*gewöhnlich* 2)
 >
 > *Y* −*Res*=*Anzahlder Bildpunkteder y*−*Achse n*∈ℕ∖(0,1)
 >
