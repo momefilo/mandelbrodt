@@ -92,14 +92,11 @@ entsprechen.
 
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image4.png)
 
-Bild:\
-Drei vollständig und ein teilweise zu sehender Farbgeber. Links im Bild
-die Navigations- und Befehlsbuttons der Farbgebung
-
+Bild: Drei vollständig und ein teilweise zu sehender Farbgeber. Links im Bild
+die Navigations- und Befehlsbuttons der Farbgebung\
 Da die Menge an Farbgebern meist nicht in einem Satz sichtbar ist, zeigt
 die obere Zahl im gelb markierten Bereich den aktuell angezeigten Satz
-und die Untere die Anzahl an Farbgeber-Sätzen an.
-
+und die Untere die Anzahl an Farbgeber-Sätzen an.\
 Die Pfeilbuttons dienen der Navigation innerhalb der Sätze. Die Farbe
 kann durch ziehen der Farbbalken im Farbgeber mit der Maus eingestellt
 werden und wird im waagerechten Balken unter der Anzahl an Bildpunkten
