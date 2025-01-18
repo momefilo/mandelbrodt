@@ -17,22 +17,22 @@ diesem Programm, in Abhängigkeit der Iterationstiefe gefärbt und als
 BMP-Bilddatei gespeichert werden können. Zur Bedienung des Programms
 werden Begriffe gebraucht die im Folgendem erörtert sind.
 
-> ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image2.png)Bild oben: **Wichtig** Die Zahlenwerte
-> haben eine Überschrift und können mit je vier Buttons darüber in
-> Schritten erhöht, und vier Buttons darunter gesenkt werden. Änderungen
-> müssen mit Klick auf „Calc" neu berechnet/abgebildet werden.
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image2.png)
 
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png)
+Bild oben: **Wichtig** Die Zahlenwerte
+haben eine Überschrift und können mit je vier Buttons darüber in
+Schritten erhöht, und vier Buttons darunter gesenkt werden. Änderungen
+müssen mit Klick auf „Calc" neu berechnet/abgebildet werden.
 
-**Zoomen**
+**Zoomen**\
 Wir „zoomen in das Apfelmännchen in dem wir den kleinen magentafrbenen
 „Maus-Quader" des Programms, durch Drücken und Halten der linken
 Maustaste den Startpunkt und durch bewegen der Maus zum Endpunkt, diese
 Punkte mit einem zusätzlichen rechten Mausklick festlegen. Das Programm
 beginnt unmittelbar mit der Neuberechnung\
-**Wichtig**: Die interessanten Teile des Apfelmännchen sind die Ränder
 
-**X-Res und Y-Res**
+**X-Res und Y-Res**\
 Diese Parameter legen die Auflösung des zu berechnenden Apfelmännchen
 fest in der es auch als Bild gespeichert wird, aber nicht unbedingt die
 im Programm dargestellte. Das Programm skaliert das Apfelmännchen so das
@@ -41,7 +41,7 @@ gleich der Monitorauflösung. Um eine eventuell gewünschte mathematisch
 genaue Abbildung des Apfelmännchens zu erreichen ist hier ein 3 zu 2
 Format zu wählen.
 
-**r-Min/Max und i-Min/Max**
+**r-Min/Max und i-Min/Max**\
 Diese Parameter sind zur Bedienung des Programms nicht nötig und
 überspringbar\
 Die Abbildungen der Apfelmännchen-Struktur errechnen sich durch
@@ -55,7 +55,7 @@ besser durch das Zoomen. Wer experimentieren will kann die Asymmetrie
 durch ändern der i/r-min/max Werte von Hand, am besten direkt nach dem
 Start des Programms berechnen und abbilden lassen
 
-**Depth**
+**Depth**\
 Das im oberen Bild zu sehende SW-Apfelmännchen entsteht durch
 Grauabstufung in Abhängigkeit davon, wie oft ein Algorithmus auf den
 Bildpunkt angewendet werden muss bis dessen Ergebnis eine
@@ -71,7 +71,7 @@ anhand deren Iterationstiefen fest. Erhöhen wir den Startwert Depth von
 100 auf 500 und klicken auf „Calc", haben wir in weniger als einer
 Sekunde einen Eindruck der graphischen Wirkung in Schwarzweiß.
 
-**Farbgestaltung**
+**Farbgestaltung**\
 Um die Farbgestaltung zu verstehen, stellen wir uns die Iterationstiefen
 als Zahlenstrahl von Null bis zu unserem vorgegeben Depth-Wert mit
 Lücken vor, dem wir die Menge aller Bildpunkte zuordnen. So sind der
@@ -83,7 +83,7 @@ höher diese desto heller der Punkt nach dem Start des Programms. Schwarz
 bedeutet das der Bildpunkt bis zum Depth-Wert die Abbruchbedingung nicht
 erfüllt hat.
 
-**Farbgeber**
+**Farbgeber**\
 Das Programm bietet für jede Iterationstiefe einen RGB-Farbgeber, mit
 dem die Farbe aller Bildpunkte welche der Iterationstiefe entsprechen
 vorgegeben werden kann. Wichtig zu wissen das die obere der beiden
@@ -142,7 +142,7 @@ auf die rote Fläche neben dem
 Abbild löscht das gespeicherte
 Apfelmännchen.
 
-**Sortierergebnisse**
+**Sortierergebnisse**\
 > ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image6.png)
 
 ***r und i***\
