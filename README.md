@@ -18,8 +18,7 @@ BMP-Bilddatei gespeichert werden können. Zur Bedienung des Programms
 werden Begriffe gebraucht die im Folgendem erörtert sind.
 
 ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image2.png)
-
-![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png)
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png) \
 Bild oben: **Wichtig** Die Zahlenwerte
 haben eine Überschrift und können mit je vier Buttons darüber in
 Schritten erhöht, und vier Buttons darunter gesenkt werden. Änderungen
