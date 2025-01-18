@@ -151,8 +151,8 @@ Programms erdacht werden kann.
 
 Seite 4
 
-**Speichern der Apfelmännchen**
- ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image5.png)
+**Speichern der Apfelmännchen**\
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image5.png)
 Mit einem Klick auf „save" wird
 ein BMP-Bild des dargestellten
 Zeit als Namen im Ordner „bmp"
