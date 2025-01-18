@@ -1,37 +1,6 @@
 **Fraktalgenerator nach Mandelbrodt**
 
-Handbuch
-
-**Inhalt**
-
-> 1\. Allgemeines Seite 2
->
-> 2\. Zoomen Seite 2
->
-> 3\. X-Res und Y-Res Seite 3
->
-> 4\. r-min/max und i-min/max Seite 3
->
-> 5\. Depth Seite 3
->
-> 6\. Farbgestaltung Seite 4
->
-> 7\. Farbgeber Seite 4
->
-> 8\. Speichern der Apfelmännchen Seite 5
->
-> 9\. Sortierergebnisse Seite 5
->
-> 10\. Anhang: Mathematische Beschreibung Seite 6
->
-> 11\. Anhang: Die Funktion in c Seite 7
->
-> 12\. Anhang: Code-Einsprungpunkt Seite 7
->
-> 13\. Anhang: Sortierwerte Seite 8
-
-Edit:
-
+Edit:\
 Das Programm enthält eine, hier nicht weiter dokumentierte
 Serienaufnahme-Funktion die alle
 
@@ -54,22 +23,18 @@ Seite 1
 **Wichtig:** Zum Start der Anwendung muss das „start.sh"-Script mit
 sudo-rechten aufgerufen werden
 
-![](vertopal_7043454174a54f35bb26a94c2224a585/media/image1.png){width="6.559721128608924in"
-height="5.115277777777778in"}
-
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image1.png)
 Fraktale nach Mandelbrodt sind Selbstähnliche Strukturen welche mit
 diesem Programm, in Abhängigkeit der Iterationstiefe gefärbt und als
 BMP-Bilddatei gespeichert werden können. Zur Bedienung des Programms
 werden Begriffe gebraucht die im Folgendem erörtert sind.
 
-> ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image2.png){width="2.0388888888888888in"
-> height="2.0319444444444446in"} Bild oben: **Wichtig** Die Zahlenwerte
+> ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image2.png)Bild oben: **Wichtig** Die Zahlenwerte
 > haben eine Überschrift und können mit je vier Buttons darüber in
 > Schritten erhöht, und vier Buttons darunter gesenkt werden. Änderungen
 > müssen mit Klick auf „Calc" neu berechnet/abgebildet werden.
 
-![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png){width="2.0in"
-height="1.0416666666666667in"}
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image3.png)
 
 **Zoomen**
 
@@ -148,8 +113,7 @@ türkisfarben markierten Zahlen im Bild die Iterationstiefe, und die
 untere die Anzahl an Bildpunkten zeigt welcher dieser Iterationstiefe
 entsprechen.
 
-![](vertopal_7043454174a54f35bb26a94c2224a585/media/image4.png){width="3.2930555555555556in"
-height="1.8166666666666667in"}
+![](vertopal_7043454174a54f35bb26a94c2224a585/media/image4.png)
 
 Bild:\
 Drei vollständig und ein teilweise zu sehender Farbgeber. Links im Bild
@@ -192,8 +156,7 @@ Seite 4
 +-----------------------------------+-----------------------------------+
 | ![](vertopal_7                    | > Mit einem Klick auf „save" wird |
 | 043454174a54f35bb26a94c2224a585/m | > ein BMP-Bild des dargestellten  |
-| edia/image5.png){width="0.8375in" | > Apfelmännchen mit der aktuellen |
-| height="2.804165573053368in"}     | > Zeit als Namen im Ordner „bmp"  |
+| edia/image5.png)                  | > Zeit als Namen im Ordner „bmp"  |
 |                                   | > der Programmdatei abgelegt.     |
 |                                   | > Gleichzeitig wird das           |
 |                                   | > Apfelmännchen mit seinen        |
@@ -210,8 +173,7 @@ Seite 4
 
 **Sortierergebnisse**
 
-> ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image6.png){width="2.998611111111111in"
-> height="1.2583333333333333in"}
+> ![](vertopal_7043454174a54f35bb26a94c2224a585/media/image6.png)
 
 ***r und i***\
 Wenn wir uns mit dem „Maus-Quader" über dem Apfelmännchen befinden,
